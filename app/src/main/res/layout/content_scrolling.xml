@@ -48,6 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton
+                android:id="@+id/imgBtn1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon_ios7_plus_empty"
@@ -64,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton
+                android:id="@+id/imgBtn2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon_ios7_plus_empty"
@@ -80,6 +82,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton
+                android:id="@+id/imgBtn3"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon_ios7_plus_empty"
@@ -96,6 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton
+                android:id="@+id/imgBtn4"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon_ios7_plus_empty"
@@ -112,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageButton
+                android:id="@+id/imgBtn5"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/icon_ios7_plus_empty"
