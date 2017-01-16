@@ -42,29 +42,41 @@ import java.io.FileNotFoundException;
 
 public class ScrollingActivity extends AppCompatActivity {
     private static final int REQUEST_READ_STORAGE = 3;
+    static final int requestCodeImgBtn1 = 1001;
+    static final int requestCodeImgBtn2 = 1002;
+    static final int requestCodeImgBtn3 = 1003;
+    static final int requestCodeImgBtn4 = 1004;
+    static final int requestCodeImgBtn5 = 1005;
 
     private View.OnClickListener imgBtnClick = new View.OnClickListener() {
+        int requestCode = 0;
+
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imgBtn1:
+                    requestCode = requestCodeImgBtn1;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn1)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn2:
+                    requestCode = requestCodeImgBtn2;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn2)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn3:
+                    requestCode = requestCodeImgBtn3;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn3)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn4:
+                    requestCode = requestCodeImgBtn4;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn4)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn5:
+                    requestCode = requestCodeImgBtn5;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn5)",Toast.LENGTH_SHORT).show();
                     break;
             }
-            Toast.makeText(ScrollingActivity.this,"END",Toast.LENGTH_SHORT).show();
+            Toast.makeText(ScrollingActivity.this,String.valueOf(requestCode),Toast.LENGTH_SHORT).show();
 
             //**
             Intent intent = new Intent();
@@ -73,7 +85,7 @@ public class ScrollingActivity extends AppCompatActivity {
             //使用Intent.ACTION_GET_CONTENT這個Action                                            //會開啟選取圖檔視窗讓您選取手機內圖檔
             intent.setAction(Intent.ACTION_GET_CONTENT);
             //取得相片後返回本畫面
-            startActivityForResult(intent, 1);
+            startActivityForResult(intent, requestCode);
             //**
         }
     };
@@ -83,8 +95,39 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         //**
+
         if (resultCode == RESULT_OK) {
+
+            ImageButton imgBtn = (ImageButton)findViewById(R.id.imgBtn1);
+            //**check requestCode to decide show image on which button
+            switch (requestCode) {
+                case requestCodeImgBtn1:
+                    imgBtn = (ImageButton) findViewById(R.id.imgBtn1);
+                    Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn1)", Toast.LENGTH_SHORT).show();
+                    break;
+                case requestCodeImgBtn2:
+                    imgBtn = (ImageButton) findViewById(R.id.imgBtn2);
+                    Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn2)", Toast.LENGTH_SHORT).show();
+                    break;
+                case requestCodeImgBtn3:
+                    imgBtn = (ImageButton) findViewById(R.id.imgBtn3);
+                    Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn3)", Toast.LENGTH_SHORT).show();
+                    break;
+                case requestCodeImgBtn4:
+                    imgBtn = (ImageButton) findViewById(R.id.imgBtn4);
+                    Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn4)", Toast.LENGTH_SHORT).show();
+                    break;
+                case requestCodeImgBtn5:
+                    imgBtn = (ImageButton) findViewById(R.id.imgBtn5);
+                    Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn5)", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+
+            //**
+
             //取得圖檔的路徑位置
             Uri uri = data.getData();
             //寫log
@@ -98,9 +141,9 @@ public class ScrollingActivity extends AppCompatActivity {
                 //由抽象資料接口轉換圖檔路徑為Bitmap
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                 //取得圖片控制項ImageView
-                ImageButton imageView = (ImageButton) findViewById(R.id.imgBtn1);
+                //ImageButton imageView = (ImageButton) findViewById(R.id.imgBtn1);
                 // 將Bitmap設定到ImageView
-                imageView.setImageBitmap(bitmap);
+                imgBtn.setImageBitmap(bitmap);
 
 
                 /**
