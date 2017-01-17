@@ -37,10 +37,19 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+
+import cz.msebera.android.httpclient.Header;
 
 public class ScrollingActivity extends AppCompatActivity {
     private static final int REQUEST_READ_STORAGE = 3;
@@ -280,11 +289,99 @@ public class ScrollingActivity extends AppCompatActivity {
             if(selectedImgForUploadArray[i] == true){
                 Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
                 //imgBtn5.setImageBitmap(bitmapArray[i]);
+                String bitmapStream = transBitmapToStream(bitmapArray[i]);
+                imgurUpload(bitmapStream);
+
 
 
             }
 
         }
+    }
+
+    private void imgurUpload(final String image){ //插入圖片
+        Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
+        //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
+        String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
+        String mashapeKey = ""; //設定自己的 Mashape Key
+        String clientId = ""; //設定自己的 Clinet ID
+        String titleString = "hihi45454545"; //設定圖片的標題
+        //showLoadingDialog();
+
+
+
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("X-Mashape-Key", mashapeKey);
+        client.addHeader("Authorization", "Client-ID "+clientId);
+        client.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        RequestParams params = new RequestParams();
+        params.put("title", titleString);
+        params.put("image", image);
+
+
+        client.post(urlString, params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                //dismissLoadingDialog();
+                if (!response.optBoolean("success") || !response.has("data")) {
+                    Log.d("editor", "response: "+response.toString());
+                    Toast.makeText(ScrollingActivity.this,"fail", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(ScrollingActivity.this,"in On Success", Toast.LENGTH_SHORT).show();
+
+                JSONObject data = response.optJSONObject("data");
+                //Log.d("editor","link: "+data.optString("link"));
+                String link = data.optString("link","");
+                int width = data.optInt("width",0);
+                int height = data.optInt("height",0);
+                String bbcode = "[img="+width+"x"+height+"]"+link+"[/img]";
+                //textView = (TextView)findViewById(R.id.text);
+                //textView.setText(bbcode);
+                // textInsertString(bbcode); //將文字插入輸入框的程式 寫在後面
+                Log.d("editor",data.optString("link"));
+                Log.d("editor",bbcode);
+                //**
+                Toast.makeText(ScrollingActivity.this,data.optString("link"),Toast.LENGTH_SHORT).show();
+                //**
+
+            }
+
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
+                //dismissLoadingDialog();
+                //Log.d("editor","error: "+error.toString());
+
+
+                Toast.makeText(ScrollingActivity.this,"Error: " + statusCode + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                /*
+                if (error.has("data")) {
+                    JSONObject data = error.optJSONObject("data");
+                    AlertDialog dialog = new AlertDialog.Builder(DetailActivity.this)
+                            .setTitle("Error: " + statusCode + " " + e.getMessage())
+                            .setMessage(data.optString("error",""))
+                            .setPositiveButton("確定", null)
+                            .create();
+                    dialog.show();
+                }
+                */
+            }
+        });
+
+    }
+
+    private String transBitmapToStream(Bitmap myBitmap) {
+        Bitmap bitmap = myBitmap; //程式寫在後面
+
+        //將 Bitmap 轉為 base64 字串
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        byte[] bitmapData = bos.toByteArray();
+        String imageBase64 = Base64.encodeToString(bitmapData, Base64.DEFAULT);
+        return imageBase64;
     }
 
     @Override
