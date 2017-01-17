@@ -47,6 +47,12 @@ public class ScrollingActivity extends AppCompatActivity {
     static final int requestCodeImgBtn3 = 1003;
     static final int requestCodeImgBtn4 = 1004;
     static final int requestCodeImgBtn5 = 1005;
+    boolean selectedImgForUpload1 = false;
+    boolean selectedImgForUpload2 = false;
+    boolean selectedImgForUpload3 = false;
+    boolean selectedImgForUpload4 = false;
+    boolean selectedImgForUpload5 = false;
+    boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
 
     private View.OnClickListener imgBtnClick = new View.OnClickListener() {
         int requestCode = 0;
@@ -105,22 +111,27 @@ public class ScrollingActivity extends AppCompatActivity {
             switch (requestCode) {
                 case requestCodeImgBtn1:
                     imgBtn = (ImageButton) findViewById(R.id.imgBtn1);
+                    selectedImgForUpload1 = true;
                     Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn1)", Toast.LENGTH_SHORT).show();
                     break;
                 case requestCodeImgBtn2:
                     imgBtn = (ImageButton) findViewById(R.id.imgBtn2);
+                    selectedImgForUpload2 = true;
                     Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn2)", Toast.LENGTH_SHORT).show();
                     break;
                 case requestCodeImgBtn3:
                     imgBtn = (ImageButton) findViewById(R.id.imgBtn3);
+                    selectedImgForUpload3 = true;
                     Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn3)", Toast.LENGTH_SHORT).show();
                     break;
                 case requestCodeImgBtn4:
                     imgBtn = (ImageButton) findViewById(R.id.imgBtn4);
+                    selectedImgForUpload4 = true;
                     Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn4)", Toast.LENGTH_SHORT).show();
                     break;
                 case requestCodeImgBtn5:
                     imgBtn = (ImageButton) findViewById(R.id.imgBtn5);
+                    selectedImgForUpload5 = true;
                     Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn5)", Toast.LENGTH_SHORT).show();
                     break;
             }
@@ -144,6 +155,8 @@ public class ScrollingActivity extends AppCompatActivity {
                 //ImageButton imageView = (ImageButton) findViewById(R.id.imgBtn1);
                 // 將Bitmap設定到ImageView
                 imgBtn.setImageBitmap(bitmap);
+                //Bitmap bitmap11=imgBtn.getDrawingCache();//取得現在顯示在ImgBtn上的圖片
+
 
 
                 /**
@@ -212,6 +225,8 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void init() {
+
+
         //**************
         imgBtn1 = (ImageButton)findViewById(R.id.imgBtn1);
         imgBtn1.setOnClickListener(imgBtnClick);
