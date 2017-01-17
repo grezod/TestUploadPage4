@@ -44,18 +44,26 @@ import java.io.FileNotFoundException;
 
 public class ScrollingActivity extends AppCompatActivity {
     private static final int REQUEST_READ_STORAGE = 3;
+    //*
     static final int requestCodeImgBtn1 = 1001;
     static final int requestCodeImgBtn2 = 1002;
     static final int requestCodeImgBtn3 = 1003;
     static final int requestCodeImgBtn4 = 1004;
     static final int requestCodeImgBtn5 = 1005;
+    //**
     boolean selectedImgForUpload1= false;
     boolean selectedImgForUpload2= false;
     boolean selectedImgForUpload3= false;
     boolean selectedImgForUpload4= false;
     boolean selectedImgForUpload5= false;
     //**
-
+    Bitmap bitmap1;
+    Bitmap bitmap2;
+    Bitmap bitmap3;
+    Bitmap bitmap4;
+    Bitmap bitmap5;
+    //**
+    Bitmap[] bitmapArray = {bitmap1,bitmap2,bitmap3,bitmap4,bitmap5};
     boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
     //**
 
@@ -111,44 +119,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
 
-            ImageButton imgBtn = (ImageButton)findViewById(R.id.imgBtn1);
-            //**check requestCode to decide show image on which button
-            switch (requestCode) {
-                case requestCodeImgBtn1:
-                    imgBtn = (ImageButton) findViewById(R.id.imgBtn1);
-                    //selectedImgForUpload1 = true;
-                    selectedImgForUploadArray[0] = true;
-                    //Toast.makeText(ScrollingActivity.this, selectedImgForUpload1==true? "TrueY":"FalseY", Toast.LENGTH_SHORT).show();
-                    break;
-                case requestCodeImgBtn2:
-                    imgBtn = (ImageButton) findViewById(R.id.imgBtn2);
-                    selectedImgForUploadArray[1] = true;
-                    //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn2)", Toast.LENGTH_SHORT).show();
-                    break;
-                case requestCodeImgBtn3:
-                    imgBtn = (ImageButton) findViewById(R.id.imgBtn3);
-                    selectedImgForUploadArray[2] = true;
-                    //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn3)", Toast.LENGTH_SHORT).show();
-                    break;
-                case requestCodeImgBtn4:
-                    imgBtn = (ImageButton) findViewById(R.id.imgBtn4);
-                    selectedImgForUploadArray[3] = true;
-                    //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn4)", Toast.LENGTH_SHORT).show();
-                    break;
-                case requestCodeImgBtn5:
-                    imgBtn = (ImageButton) findViewById(R.id.imgBtn5);
-                    selectedImgForUploadArray[4] = true;
-                    //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn5)", Toast.LENGTH_SHORT).show();
-                    break;
-            }
-
-
-            //**
+            ///*************
 
             //取得圖檔的路徑位置
             Uri uri = data.getData();
             //寫log
-           // Log.e("uri", uri.toString());
+            // Log.e("uri", uri.toString());
             //抽象資料的接口
             //Toast.makeText(ScrollingActivity.this,"11",Toast.LENGTH_SHORT).show();
 
@@ -160,29 +136,59 @@ public class ScrollingActivity extends AppCompatActivity {
                 //取得圖片控制項ImageView
                 //ImageButton imageView = (ImageButton) findViewById(R.id.imgBtn1);
                 // 將Bitmap設定到ImageView
+
+                //***************
+
+                ImageButton imgBtn = (ImageButton)findViewById(R.id.imgBtn1);
+                //**check requestCode to decide show image on which button
+                switch (requestCode) {
+                    case requestCodeImgBtn1:
+                        imgBtn = (ImageButton) findViewById(R.id.imgBtn1);
+                        //selectedImgForUpload1 = true;
+                        selectedImgForUploadArray[0] = true;
+                        bitmapArray[0] = bitmap;
+                        //Toast.makeText(ScrollingActivity.this, selectedImgForUpload1==true? "TrueY":"FalseY", Toast.LENGTH_SHORT).show();
+                        break;
+                    case requestCodeImgBtn2:
+                        imgBtn = (ImageButton) findViewById(R.id.imgBtn2);
+                        selectedImgForUploadArray[1] = true;
+                        bitmapArray[1] = bitmap;
+                        //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn2)", Toast.LENGTH_SHORT).show();
+                        break;
+                    case requestCodeImgBtn3:
+                        imgBtn = (ImageButton) findViewById(R.id.imgBtn3);
+                        selectedImgForUploadArray[2] = true;
+                        bitmapArray[2] = bitmap;
+                        //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn3)", Toast.LENGTH_SHORT).show();
+                        break;
+                    case requestCodeImgBtn4:
+                        imgBtn = (ImageButton) findViewById(R.id.imgBtn4);
+                        selectedImgForUploadArray[3] = true;
+                        bitmapArray[3] = bitmap;
+                        //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn4)", Toast.LENGTH_SHORT).show();
+                        break;
+                    case requestCodeImgBtn5:
+                        imgBtn = (ImageButton) findViewById(R.id.imgBtn5);
+                        selectedImgForUploadArray[4] = true;
+                        bitmapArray[4] = bitmap;
+                        //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn5)", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+
+                //**
+
+
+                //**
                 imgBtn.setImageBitmap(bitmap);
-                //Bitmap bitmap11=imgBtn.getDrawingCache();//取得現在顯示在ImgBtn上的圖片
+                //**
 
-
-
-                /**
-
-                //將 Bitmap 轉為 base64 字串
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-                byte[] bitmapData = bos.toByteArray();
-                String imageBase64 = Base64.encodeToString(bitmapData, Base64.DEFAULT);
-                //Log.d("editor",imageBase64);
-
-                //將圖檔上傳至 Imgur，將取得的圖檔網址插入文字輸入框
-
-                imgurUpload(imageBase64); //程式寫在後面
-
-                */
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);
             }
+
+
+
 
 
 
@@ -222,13 +228,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void init() {
         //***
-        /*
-        selectedImgForUpload1 = false;
-        selectedImgForUpload2 = false;
-        selectedImgForUpload3 = false;
-        selectedImgForUpload4 = false;
-        selectedImgForUpload5 = false;
-        */
+
         //***********************
 
         //**
@@ -279,6 +279,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
             if(selectedImgForUploadArray[i] == true){
                 Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
+                //imgBtn5.setImageBitmap(bitmapArray[i]);
+
 
             }
 
