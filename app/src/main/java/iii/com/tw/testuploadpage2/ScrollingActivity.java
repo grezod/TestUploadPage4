@@ -6,6 +6,7 @@ import android.app.LoaderManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
 import static android.R.attr.bitmap;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
 
 
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -211,6 +213,11 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
         init();
+
+    }
+
+    private void init() {
+        //***********************
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -218,13 +225,21 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               new android.support.v7.app.AlertDialog.Builder(ScrollingActivity.this)
+                       .setMessage("是否確定送出資料")
+                       .setTitle("送出確認")
+                       .setPositiveButton("送出", new DialogInterface.OnClickListener() {
+                           @Override
+                           public void onClick(DialogInterface dialog, int which) {
+                               Toast.makeText(ScrollingActivity.this,"使用者按下確認",Toast.LENGTH_SHORT).show();
+                           }
+                       })
+                       .setNegativeButton("取消",null)
+                       .show();
+
             }
         });
-    }
-
-    private void init() {
+        ///**************************
 
 
         //**************
