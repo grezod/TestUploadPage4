@@ -343,7 +343,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 Log.d("editor",data.optString("link"));
                 Log.d("editor",bbcode);
                 //**
-                Toast.makeText(ScrollingActivity.this,data.optString("link"),Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScrollingActivity.this,data.optString("link"),Toast.LENGTH_LONG).show();
                 //**
 
             }
