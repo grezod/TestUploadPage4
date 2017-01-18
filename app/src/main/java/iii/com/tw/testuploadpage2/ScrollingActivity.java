@@ -303,8 +303,8 @@ public class ScrollingActivity extends AppCompatActivity {
         Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
         //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
-        String mashapeKey = ""; //設定自己的 Mashape Key
-        String clientId = ""; //設定自己的 Clinet ID
+        String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
+        String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
         String titleString = "hihi45454545"; //設定圖片的標題
         //showLoadingDialog();
 
