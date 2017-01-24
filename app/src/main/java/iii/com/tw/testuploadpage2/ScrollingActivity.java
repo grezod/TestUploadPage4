@@ -311,7 +311,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
             }
 
-
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
                 Toast.makeText(ScrollingActivity.this,"Error: " + statusCode + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
