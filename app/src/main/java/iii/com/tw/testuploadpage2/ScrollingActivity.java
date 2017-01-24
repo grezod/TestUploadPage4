@@ -110,7 +110,7 @@ public class ScrollingActivity extends AppCompatActivity {
             Intent intent = new Intent();
             //開啟Pictures畫面Type設定為image
             intent.setType("image/*");
-            //使用Intent.ACTION_GET_CONTENT這個Action                                            //會開啟選取圖檔視窗讓您選取手機內圖檔
+            //使用Intent.ACTION_GET_CONTENT這個Action會開啟選取圖檔視窗讓您選取手機內圖檔
             intent.setAction(Intent.ACTION_GET_CONTENT);
             //取得相片後返回本畫面
             startActivityForResult(intent, requestCode);
@@ -183,11 +183,6 @@ public class ScrollingActivity extends AppCompatActivity {
                         //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn5)", Toast.LENGTH_SHORT).show();
                         break;
                 }
-
-
-                //**
-
-
                 //**
                 imgBtn.setImageBitmap(bitmap);
                 //**
@@ -195,23 +190,9 @@ public class ScrollingActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);
             }
+         }
+       }
 
-
-
-
-
-
-
-        }
-        //**
-    }
-
-    //*************
-
-    //**
-
-
-    //**
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,17 +209,11 @@ public class ScrollingActivity extends AppCompatActivity {
                     REQUEST_READ_STORAGE );
         }else{
             //已有權限，可進行檔案存取
-
         }
-
         init();
-
     }
 
     private void init() {
-        //***
-
-        //***********************
 
         //**
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -288,14 +263,9 @@ public class ScrollingActivity extends AppCompatActivity {
 
             if(selectedImgForUploadArray[i] == true){
                 Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
-                //imgBtn5.setImageBitmap(bitmapArray[i]);
                 String bitmapStream = transBitmapToStream(bitmapArray[i]);
                 imgurUpload(bitmapStream);
-
-
-
             }
-
         }
     }
 
@@ -306,9 +276,6 @@ public class ScrollingActivity extends AppCompatActivity {
         String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
         String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
         String titleString = "hihi45454545"; //設定圖片的標題
-        //showLoadingDialog();
-
-
 
         AsyncHttpClient client = new AsyncHttpClient();
         client.addHeader("X-Mashape-Key", mashapeKey);
@@ -319,12 +286,10 @@ public class ScrollingActivity extends AppCompatActivity {
         params.put("title", titleString);
         params.put("image", image);
 
-
-
         client.post(urlString, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //dismissLoadingDialog();
+
                 if (!response.optBoolean("success") || !response.has("data")) {
                     Log.d("editor", "response: "+response.toString());
                     Toast.makeText(ScrollingActivity.this,"fail", Toast.LENGTH_SHORT).show();
@@ -333,14 +298,11 @@ public class ScrollingActivity extends AppCompatActivity {
                 Toast.makeText(ScrollingActivity.this,"in On Success", Toast.LENGTH_SHORT).show();
 
                 JSONObject data = response.optJSONObject("data");
-                //Log.d("editor","link: "+data.optString("link"));
                 String link = data.optString("link","");
                 int width = data.optInt("width",0);
                 int height = data.optInt("height",0);
                 String bbcode = "[img="+width+"x"+height+"]"+link+"[/img]";
-                //textView = (TextView)findViewById(R.id.text);
-                //textView.setText(bbcode);
-                // textInsertString(bbcode); //將文字插入輸入框的程式 寫在後面
+
                 Log.d("editor",data.optString("link"));
                 Log.d("editor",bbcode);
                 //**
@@ -352,23 +314,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
-                //dismissLoadingDialog();
-                //Log.d("editor","error: "+error.toString());
-
-
                 Toast.makeText(ScrollingActivity.this,"Error: " + statusCode + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
-                /*
-                if (error.has("data")) {
-                    JSONObject data = error.optJSONObject("data");
-                    AlertDialog dialog = new AlertDialog.Builder(DetailActivity.this)
-                            .setTitle("Error: " + statusCode + " " + e.getMessage())
-                            .setMessage(data.optString("error",""))
-                            .setPositiveButton("確定", null)
-                            .create();
-                    dialog.show();
-                }
-                */
             }
         });
 
