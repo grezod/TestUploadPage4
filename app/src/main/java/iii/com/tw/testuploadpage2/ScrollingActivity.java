@@ -320,6 +320,7 @@ public class ScrollingActivity extends AppCompatActivity {
         params.put("image", image);
 
 
+
         client.post(urlString, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
