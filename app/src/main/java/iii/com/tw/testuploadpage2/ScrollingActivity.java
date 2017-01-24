@@ -34,6 +34,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -215,7 +216,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void init() {
 
-        //**
+        //****************************
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -239,7 +240,19 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
         ///**************************
-
+        EditText edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
+        EditText edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
+        EditText edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
+        EditText edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
+        EditText edTxt_animalChip = (EditText)findViewById(R.id.edTxt_animalChip);
+        EditText edTxt_animalColor = (EditText)findViewById(R.id.edTxt_animalColor);
+        EditText edTxt_animalDate = (EditText)findViewById(R.id.edTxt_animalDate);
+        EditText edTxt_animalDisease_Other = (EditText)findViewById(R.id.edTxt_animalDisease_Other);
+        EditText edTxt_animalGender = (EditText)findViewById(R.id.edTxt_animalGender);
+        EditText edTxt_animalHealthy = (EditText)findViewById(R.id.edTxt_animalHealthy);
+        EditText edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
+        EditText edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
+        EditText edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
 
         //**************
         imgBtn1 = (ImageButton)findViewById(R.id.imgBtn1);
@@ -359,4 +372,23 @@ public class ScrollingActivity extends AppCompatActivity {
     ImageButton imgBtn5;
     ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
     //*********************
+    EditText animalID;
+    EditText animalData_animalTypeID;
+    EditText animalName;
+    EditText animalAddress;
+    EditText animalDate;
+    EditText animalGender;
+    EditText animalAge;
+    EditText animalColor;
+    EditText animalBirth;
+    EditText animalChip;
+    EditText animalHealthy;
+    EditText animalDisease_Other;
+    EditText animalOwner_userID;
+    EditText animalReason;
+    EditText animalGetter_userID;
+    EditText animalAdopted;
+    EditText animalAdoptedDate;
+    EditText animalNote;
+    //***********************
 }
