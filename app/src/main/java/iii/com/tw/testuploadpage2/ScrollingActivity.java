@@ -1,30 +1,21 @@
 package iii.com.tw.testuploadpage2;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.LoaderManager;
 import android.content.ContentResolver;
-import android.content.Context;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
-import static android.R.attr.bitmap;
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
+import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
+import static iii.com.tw.testuploadpage2.R.id.edTxt_animalNote;
+import static iii.com.tw.testuploadpage2.R.id.edTxt_animalReason;
 
 
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -33,12 +24,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -47,12 +34,32 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import cz.msebera.android.httpclient.Header;
+//***********
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+//************
+import  com.google.gson.Gson;
+import  com.google.gson.reflect.TypeToken;
+
+//*******
 
 public class ScrollingActivity extends AppCompatActivity {
+    //***
+    OkHttpClient Iv_OkHttp_client = new OkHttpClient();
+    public static final MediaType Iv_MTyp_JSON = MediaType.parse("application/json; charset=utf-8");
+    //**
     private static final int REQUEST_READ_STORAGE = 3;
     //*
     static final int requestCodeImgBtn1 = 1001;
@@ -231,7 +238,9 @@ public class ScrollingActivity extends AppCompatActivity {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
                                Toast.makeText(ScrollingActivity.this,"使用者按下確認",Toast.LENGTH_SHORT).show();
-                               sendFormDataToServer();
+                               uploadImageAndGetSiteBack();
+                               addAllDataToDBServer();
+
                            }
                        })
                        .setNegativeButton("取消",null)
@@ -240,19 +249,19 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
         ///**************************
-        EditText edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
-        EditText edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
-        EditText edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
-        EditText edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
-        EditText edTxt_animalChip = (EditText)findViewById(R.id.edTxt_animalChip);
-        EditText edTxt_animalColor = (EditText)findViewById(R.id.edTxt_animalColor);
-        EditText edTxt_animalDate = (EditText)findViewById(R.id.edTxt_animalDate);
-        EditText edTxt_animalDisease_Other = (EditText)findViewById(R.id.edTxt_animalDisease_Other);
-        EditText edTxt_animalGender = (EditText)findViewById(R.id.edTxt_animalGender);
-        EditText edTxt_animalHealthy = (EditText)findViewById(R.id.edTxt_animalHealthy);
-        EditText edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
-        EditText edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
-        EditText edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
+         edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
+         edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
+         edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
+         edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
+         edTxt_animalChip = (EditText)findViewById(R.id.edTxt_animalChip);
+         edTxt_animalColor = (EditText)findViewById(R.id.edTxt_animalColor);
+         edTxt_animalDate = (EditText)findViewById(R.id.edTxt_animalDate);
+         edTxt_animalDisease_Other = (EditText)findViewById(R.id.edTxt_animalDisease_Other);
+         edTxt_animalGender = (EditText)findViewById(R.id.edTxt_animalGender);
+         edTxt_animalHealthy = (EditText)findViewById(R.id.edTxt_animalHealthy);
+         edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
+         edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
+         edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
 
         //**************
         imgBtn1 = (ImageButton)findViewById(R.id.imgBtn1);
@@ -271,7 +280,61 @@ public class ScrollingActivity extends AppCompatActivity {
         imgBtn5.setOnClickListener(imgBtnClick);
     }
 
-    private void sendFormDataToServer() {
+    private void addAllDataToDBServer() {
+        //************
+        petDataForSelfDB l_PetData_PetObj = new petDataForSelfDB();
+        l_PetData_PetObj.setAnimalAddress(edTxt_animalAddress.getText().toString());
+        l_PetData_PetObj.setAnimalAge(edTxt_animalAge.getText().toString());
+        l_PetData_PetObj.setAnimalBirth(edTxt_animalBirth.getText().toString());
+        l_PetData_PetObj.setAnimalChip(edTxt_animalChip.getText().toString());
+        l_PetData_PetObj.setAnimalColor(edTxt_animalColor.getText().toString());
+        l_PetData_PetObj.setAnimalData_animalTypeID(edTxt_animalData_animalTypeID.getText().toString());
+        l_PetData_PetObj.setAnimalDate(edTxt_animalDate.getText().toString());
+        l_PetData_PetObj.setAnimalDisease_Other(edTxt_animalDisease_Other.getText().toString());
+        l_PetData_PetObj.setAnimalGender(edTxt_animalGender.getText().toString());
+        l_PetData_PetObj.setAnimalHealthy(edTxt_animalHealthy.getText().toString());
+        l_PetData_PetObj.setAnimalName(edTxt_animalName.getText().toString());
+        l_PetData_PetObj.setAnimalNote(edTxt_animalNote.getText().toString());
+        l_PetData_PetObj.setAnimalReason(edTxt_animalReason.getText().toString());
+        //****************
+        Gson l_gsn_gson = new Gson();
+        String l_strPetDataObjToJSONString = l_gsn_gson.toJson(l_PetData_PetObj);
+        //***********
+        RequestBody requestBody =  RequestBody.create(Iv_MTyp_JSON,l_strPetDataObjToJSONString);
+
+        //***************
+        Request request = new Request.Builder()
+                .url("http://twpetanimal.ddns.net:9487/api/v1/AnimalDatas")
+                .addHeader("Content-Type","application/x-www-form-urlencoded")
+                .post(requestBody)
+                .build();
+
+        Call call = Iv_OkHttp_client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("http","fail");
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                Log.d("http",json);
+                //textView.setText(json);
+
+                //parseJson(json);
+            }
+        });
+
+
+        //*******************
+
+
+
+    }
+
+    private void uploadImageAndGetSiteBack() {
         for (int i = 0; i < selectedImgForUploadArray.length; i++) {
 
             if(selectedImgForUploadArray[i] == true){
@@ -372,23 +435,23 @@ public class ScrollingActivity extends AppCompatActivity {
     ImageButton imgBtn5;
     ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
     //*********************
-    EditText animalID;
-    EditText animalData_animalTypeID;
-    EditText animalName;
-    EditText animalAddress;
-    EditText animalDate;
-    EditText animalGender;
-    EditText animalAge;
-    EditText animalColor;
-    EditText animalBirth;
-    EditText animalChip;
-    EditText animalHealthy;
-    EditText animalDisease_Other;
-    EditText animalOwner_userID;
-    EditText animalReason;
-    EditText animalGetter_userID;
-    EditText animalAdopted;
-    EditText animalAdoptedDate;
-    EditText animalNote;
+    EditText edTxt_animalID;
+    EditText edTxt_animalData_animalTypeID;
+    EditText edTxt_animalName;
+    EditText edTxt_animalAddress;
+    EditText edTxt_animalDate;
+    EditText edTxt_animalGender;
+    EditText edTxt_animalAge;
+    EditText edTxt_animalColor;
+    EditText edTxt_animalBirth;
+    EditText edTxt_animalChip;
+    EditText edTxt_animalHealthy;
+    EditText edTxt_animalDisease_Other;
+    EditText edTxt_animalOwner_userID;
+    EditText edTxt_animalReason;
+    EditText edTxt_animalGetter_userID;
+    EditText edTxt_animalAdopted;
+    EditText edTxt_animalAdoptedDate;
+    EditText edTxt_animalNote;
     //***********************
 }
