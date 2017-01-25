@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
+import static android.R.attr.id;
 import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
 import static iii.com.tw.testuploadpage2.R.id.edTxt_animalNote;
 import static iii.com.tw.testuploadpage2.R.id.edTxt_animalReason;
@@ -32,6 +33,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -319,9 +321,24 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
+                final String json = response.body().string();
                 Log.d("http",json);
                 //textView.setText(json);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            JSONObject jObj = new JSONObject(json);
+                            String id = jObj.getString("animalID");
+                            Toast.makeText(ScrollingActivity.this,"上傳成功!(測試用_此次新增資料的id: "+id+")",Toast.LENGTH_SHORT).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
 
                 //parseJson(json);
             }
