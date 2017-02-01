@@ -11,10 +11,6 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
-import static android.R.attr.id;
-import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
-import static iii.com.tw.testuploadpage2.R.id.edTxt_animalNote;
-import static iii.com.tw.testuploadpage2.R.id.edTxt_animalReason;
 
 
 import android.support.v7.app.AppCompatActivity;
@@ -46,14 +42,12 @@ import cz.msebera.android.httpclient.Header;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 //************
 import  com.google.gson.Gson;
-import  com.google.gson.reflect.TypeToken;
 
 //*******
 
@@ -284,13 +278,12 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void addAllDataToDBServer() {
         //************
-        petDataForSelfDB l_PetData_PetObj = new petDataForSelfDB();
+        object_petDataForSelfDB l_PetData_PetObj = new object_petDataForSelfDB();
         l_PetData_PetObj.setAnimalAddress(edTxt_animalAddress.getText().toString());
         l_PetData_PetObj.setAnimalAge(edTxt_animalAge.getText().toString());
         l_PetData_PetObj.setAnimalBirth(edTxt_animalBirth.getText().toString());
         l_PetData_PetObj.setAnimalChip(edTxt_animalChip.getText().toString());
         l_PetData_PetObj.setAnimalColor(edTxt_animalColor.getText().toString());
-        l_PetData_PetObj.setAnimalData_animalTypeID(edTxt_animalData_animalTypeID.getText().toString());
         l_PetData_PetObj.setAnimalDate(edTxt_animalDate.getText().toString());
         l_PetData_PetObj.setAnimalDisease_Other(edTxt_animalDisease_Other.getText().toString());
         l_PetData_PetObj.setAnimalGender(edTxt_animalGender.getText().toString());
