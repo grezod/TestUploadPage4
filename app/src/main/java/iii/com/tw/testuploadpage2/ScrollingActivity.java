@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -218,6 +219,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void init() {
+        setViewComponent();
 
         //****************************
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -245,19 +247,23 @@ public class ScrollingActivity extends AppCompatActivity {
             }
         });
         ///**************************
-         edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
-         edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
-         edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
-         edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
-         edTxt_animalChip = (EditText)findViewById(R.id.edTxt_animalChip);
-         edTxt_animalColor = (EditText)findViewById(R.id.edTxt_animalColor);
-         edTxt_animalDate = (EditText)findViewById(R.id.edTxt_animalDate);
-         edTxt_animalDisease_Other = (EditText)findViewById(R.id.edTxt_animalDisease_Other);
-         edTxt_animalGender = (EditText)findViewById(R.id.edTxt_animalGender);
-         edTxt_animalHealthy = (EditText)findViewById(R.id.edTxt_animalHealthy);
-         edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
-         edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
-         edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
+
+    }
+
+    private void setViewComponent() {
+        edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
+        edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
+        edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
+        edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
+        edTxt_animalChip = (EditText)findViewById(R.id.edTxt_animalChip);
+        edTxt_animalColor = (EditText)findViewById(R.id.edTxt_animalColor);
+        edTxt_animalDate = (EditText)findViewById(R.id.edTxt_animalDate);
+        edTxt_animalDisease_Other = (EditText)findViewById(R.id.edTxt_animalDisease_Other);
+        edTxt_animalGender = (EditText)findViewById(R.id.edTxt_animalGender);
+        edTxt_animalHealthy = (EditText)findViewById(R.id.edTxt_animalHealthy);
+        edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
+        edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
+        edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
 
         //**************
         imgBtn1 = (ImageButton)findViewById(R.id.imgBtn1);
@@ -274,6 +280,14 @@ public class ScrollingActivity extends AppCompatActivity {
         //**************
         imgBtn5 = (ImageButton)findViewById(R.id.imgBtn5);
         imgBtn5.setOnClickListener(imgBtnClick);
+        //**************
+        btnAdoptCondition = (Button) findViewById(R.id.btnAdoptCondition);
+        btnAdoptCondition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void addAllDataToDBServer() {
@@ -443,6 +457,7 @@ public class ScrollingActivity extends AppCompatActivity {
     ImageButton imgBtn3;
     ImageButton imgBtn4;
     ImageButton imgBtn5;
+    Button btnAdoptCondition;
     ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
     //*********************
     EditText edTxt_animalID;
