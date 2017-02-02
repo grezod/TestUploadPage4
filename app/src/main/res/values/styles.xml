@@ -33,8 +33,8 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <!-- 是否變暗 -->
         <item name="android:backgroundDimEnabled">false</item>
-        <!-- 點擊空白部分activity不消失 -->
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <!-- 點擊空白部分activity消失 -->
+        <item name="android:windowCloseOnTouchOutside">false</item>
 
     </style>
 
