@@ -53,6 +53,8 @@ import  com.google.gson.Gson;
 //*******
 
 public class ScrollingActivity extends AppCompatActivity {
+    //**
+    public static ScrollingActivity scrollingActivity;
     //***
     OkHttpClient Iv_OkHttp_client = new OkHttpClient();
     public static final MediaType Iv_MTyp_JSON = MediaType.parse("application/json; charset=utf-8");
@@ -81,45 +83,54 @@ public class ScrollingActivity extends AppCompatActivity {
     boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
     //**
 
-    private View.OnClickListener imgBtnClick = new View.OnClickListener() {
-        int requestCode = 0;
+    private View.OnClickListener btn_click = new View.OnClickListener() {
+        int IntentRCodeOfOpenAlbum = 0;
 
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
                 case R.id.imgBtn1:
-                    requestCode = requestCodeImgBtn1;
+                    IntentRCodeOfOpenAlbum = requestCodeImgBtn1;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn1)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn2:
-                    requestCode = requestCodeImgBtn2;
+                    IntentRCodeOfOpenAlbum = requestCodeImgBtn2;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn2)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn3:
-                    requestCode = requestCodeImgBtn3;
+                    IntentRCodeOfOpenAlbum = requestCodeImgBtn3;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn3)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn4:
-                    requestCode = requestCodeImgBtn4;
+                    IntentRCodeOfOpenAlbum = requestCodeImgBtn4;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn4)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn5:
-                    requestCode = requestCodeImgBtn5;
+                    IntentRCodeOfOpenAlbum = requestCodeImgBtn5;
                     Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn5)",Toast.LENGTH_SHORT).show();
                     break;
+                case R.id.btnAdoptCondition:
+                    Log.d("123","btnAdoptCondition");
+                    Intent intent = new Intent(ScrollingActivity.this,actDialogOfPetAdoptCondition.class);
+                    startActivity(intent);
+                    break;
             }
-            Toast.makeText(ScrollingActivity.this,String.valueOf(requestCode),Toast.LENGTH_SHORT).show();
 
-            //**
-            Intent intent = new Intent();
-            //開啟Pictures畫面Type設定為image
-            intent.setType("image/*");
-            //使用Intent.ACTION_GET_CONTENT這個Action會開啟選取圖檔視窗讓您選取手機內圖檔
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            //取得相片後返回本畫面
-            startActivityForResult(intent, requestCode);
-            //**
+            if(v.getId()!=R.id.btnAdoptCondition){
+                Toast.makeText(ScrollingActivity.this,String.valueOf(IntentRCodeOfOpenAlbum),Toast.LENGTH_SHORT).show();
+
+                //**
+                Intent intent = new Intent();
+                //開啟Pictures畫面Type設定為image
+                intent.setType("image/*");
+                //使用Intent.ACTION_GET_CONTENT這個Action會開啟選取圖檔視窗讓您選取手機內圖檔
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                //取得相片後返回本畫面
+                startActivityForResult(intent, IntentRCodeOfOpenAlbum);
+                //**
+            }
+
         }
     };
 
@@ -129,11 +140,13 @@ public class ScrollingActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
 
+
         //**
 
         if (resultCode == RESULT_OK) {
 
             ///*************
+            Log.d("OK","OK");
 
             //取得圖檔的路徑位置
             Uri uri = data.getData();
@@ -216,6 +229,7 @@ public class ScrollingActivity extends AppCompatActivity {
             //已有權限，可進行檔案存取
         }
         init();
+
     }
 
     private void init() {
@@ -250,6 +264,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
     }
 
+
+
     private void setViewComponent() {
         edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
         edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
@@ -264,30 +280,26 @@ public class ScrollingActivity extends AppCompatActivity {
         edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
         edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
         edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
-
+        //***
+        scrollingActivity = this;
         //**************
         imgBtn1 = (ImageButton)findViewById(R.id.imgBtn1);
-        imgBtn1.setOnClickListener(imgBtnClick);
+        imgBtn1.setOnClickListener(btn_click);
         //**************
         imgBtn2 = (ImageButton)findViewById(R.id.imgBtn2);
-        imgBtn2.setOnClickListener(imgBtnClick);
+        imgBtn2.setOnClickListener(btn_click);
         //**************
         imgBtn3 = (ImageButton)findViewById(R.id.imgBtn3);
-        imgBtn3.setOnClickListener(imgBtnClick);
+        imgBtn3.setOnClickListener(btn_click);
         //**************
         imgBtn4 = (ImageButton)findViewById(R.id.imgBtn4);
-        imgBtn4.setOnClickListener(imgBtnClick);
+        imgBtn4.setOnClickListener(btn_click);
         //**************
         imgBtn5 = (ImageButton)findViewById(R.id.imgBtn5);
-        imgBtn5.setOnClickListener(imgBtnClick);
+        imgBtn5.setOnClickListener(btn_click);
         //**************
         btnAdoptCondition = (Button) findViewById(R.id.btnAdoptCondition);
-        btnAdoptCondition.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        btnAdoptCondition.setOnClickListener(btn_click);
     }
 
     private void addAllDataToDBServer() {
