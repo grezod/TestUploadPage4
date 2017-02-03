@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
+//import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
 
 
 import android.support.v7.app.AppCompatActivity;
@@ -30,6 +31,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,9 +39,12 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 //***********
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -83,8 +88,14 @@ public class ScrollingActivity extends AppCompatActivity {
     //***
     object_ConditionOfAdoptPet object_conditionOfAdoptPet;
     //**
+    Gson iv_gson;
+    //**
     Bitmap[] bitmapArray = {bitmap1,bitmap2,bitmap3,bitmap4,bitmap5};
     boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
+    ArrayList<object_OfPictureImgurSite> iv_ArrayList_object_OfPictureImgurSite;
+    ArrayList<object_ConditionOfAdoptPet> iv_ArrayList_object_ConditionOfAdoptPet;
+
+
     //**
 
     private View.OnClickListener btn_click = new View.OnClickListener() {
@@ -248,6 +259,9 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void init() {
+        iv_ArrayList_object_ConditionOfAdoptPet = new ArrayList<>();
+        iv_ArrayList_object_OfPictureImgurSite = new ArrayList<>();
+        iv_gson= new Gson();
         setViewComponent();
 
         //****************************
@@ -282,7 +296,8 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
     private void setViewComponent() {
-        edTxt_animalData_animalTypeID = (EditText)findViewById(R.id.edTxt_animalData_animalTypeID);
+        edTxt_animalKind = (EditText)findViewById(R.id.edTxt_animalKind);
+        edTxt_animalType = (EditText)findViewById(R.id.edTxt_animalKind);
         edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
         edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
         edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
@@ -318,10 +333,22 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void addAllDataToDBServer() {
+        //******判斷使用者是否填寫領養條件
+
+        if(iv_object_conditionOfAdoptPet_a == null){
+            iv_object_conditionOfAdoptPet_a = new  object_ConditionOfAdoptPet();
+            iv_object_conditionOfAdoptPet_a.createAdefault_object_ConditionOfAdoptPet();
+        }
+
+            iv_ArrayList_object_ConditionOfAdoptPet.add(iv_object_conditionOfAdoptPet_a);
+
+
         //************
         object_petDataForSelfDB l_PetData_PetObj = new object_petDataForSelfDB();
         l_PetData_PetObj.setAnimalAddress(edTxt_animalAddress.getText().toString());
         l_PetData_PetObj.setAnimalAge(edTxt_animalAge.getText().toString());
+        l_PetData_PetObj.setAnimalKind(edTxt_animalKind.getText().toString());
+        l_PetData_PetObj.setAnimalType((edTxt_animalType.getText().toString()));
         l_PetData_PetObj.setAnimalBirth(edTxt_animalBirth.getText().toString());
         l_PetData_PetObj.setAnimalChip(edTxt_animalChip.getText().toString());
         l_PetData_PetObj.setAnimalColor(edTxt_animalColor.getText().toString());
@@ -332,6 +359,8 @@ public class ScrollingActivity extends AppCompatActivity {
         l_PetData_PetObj.setAnimalName(edTxt_animalName.getText().toString());
         l_PetData_PetObj.setAnimalNote(edTxt_animalNote.getText().toString());
         l_PetData_PetObj.setAnimalReason(edTxt_animalReason.getText().toString());
+        l_PetData_PetObj.setAnimalData_Condition(iv_ArrayList_object_ConditionOfAdoptPet);
+        l_PetData_PetObj.setAnimalData_Pic(null);
         //****************
         Gson l_gsn_gson = new Gson();
         String l_strPetDataObjToJSONString = l_gsn_gson.toJson(l_PetData_PetObj);
@@ -341,7 +370,7 @@ public class ScrollingActivity extends AppCompatActivity {
         //***************
         Request request = new Request.Builder()
                 .url("http://twpetanimal.ddns.net:9487/api/v1/AnimalDatas")
-                .addHeader("Content-Type","application/x-www-form-urlencoded")
+                .addHeader("Content-Type","raw")
                 .post(requestBody)
                 .build();
 
@@ -389,7 +418,7 @@ public class ScrollingActivity extends AppCompatActivity {
         for (int i = 0; i < selectedImgForUploadArray.length; i++) {
 
             if(selectedImgForUploadArray[i] == true){
-                Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
+               // Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
                 String bitmapStream = transBitmapToStream(bitmapArray[i]);
                 imgurUpload(bitmapStream);
             }
@@ -404,16 +433,17 @@ public class ScrollingActivity extends AppCompatActivity {
         String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
         String titleString = "hihi45454545"; //設定圖片的標題
 
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader("X-Mashape-Key", mashapeKey);
-        client.addHeader("Authorization", "Client-ID "+clientId);
-        client.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        AsyncHttpClient client0 = new AsyncHttpClient();
+        client0.addHeader("X-Mashape-Key", mashapeKey);
+        client0.addHeader("Authorization", "Client-ID "+clientId);
+        client0.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         RequestParams params = new RequestParams();
         params.put("title", titleString);
         params.put("image", image);
 
-        client.post(urlString, params, new JsonHttpResponseHandler() {
+        client0.post(urlString, params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
@@ -430,12 +460,16 @@ public class ScrollingActivity extends AppCompatActivity {
                 int height = data.optInt("height",0);
                 String bbcode = "[img="+width+"x"+height+"]"+link+"[/img]";
 
-                Log.d("editor",data.optString("link"));
-                Log.d("editor",bbcode);
+               // Log.d("editor",data.optString("link"));
+               // Log.d("editor",bbcode);
                 //**
                 Toast.makeText(ScrollingActivity.this,data.optString("link"),Toast.LENGTH_LONG).show();
                 Log.d("imgSite",link);
                 //**
+                object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
+
+
+                iv_ArrayList_object_OfPictureImgurSite.add(l_object_OfPictureImgurSite);
 
             }
 
@@ -489,7 +523,8 @@ public class ScrollingActivity extends AppCompatActivity {
     ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
     //*********************
     EditText edTxt_animalID;
-    EditText edTxt_animalData_animalTypeID;
+    EditText edTxt_animalKind;
+    EditText edTxt_animalType;
     EditText edTxt_animalName;
     EditText edTxt_animalAddress;
     EditText edTxt_animalDate;
