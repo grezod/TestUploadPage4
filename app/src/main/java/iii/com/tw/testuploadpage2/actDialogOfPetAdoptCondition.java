@@ -21,6 +21,23 @@ public class actDialogOfPetAdoptCondition extends Activity {
 
     }
 
+    @Override
+    public void finish() {
+        object_ConditionOfAdoptPet l_object_ConditionOfAdoptPet_objA = new object_ConditionOfAdoptPet();
+        l_object_ConditionOfAdoptPet_objA.setConditionAge(edTxt_conditionAge.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionEconomy(edTxt_conditionEconomy.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionHome(edTxt_conditionHome.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionFamily(edTxt_conditionFamily.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionReply(edTxt_conditionReply.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionPaper(edTxt_conditionPaper.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionFee(edTxt_conditionFee.getText().toString());
+        l_object_ConditionOfAdoptPet_objA.setConditionOther(edTxt_conditionOther.getText().toString());
+        Intent intent = getIntent();
+        intent.putExtra("l_object_ConditionOfAdoptPet_objA",l_object_ConditionOfAdoptPet_objA);
+        setResult(CDictionary.IntentRqCodeOfPetAdoptCondition,intent);
+        super.finish();
+    }
+
     private void init() {
 
         edTxt_conditionAge=(EditText)findViewById(R.id.edTxt_conditionAge);
@@ -49,18 +66,7 @@ public class actDialogOfPetAdoptCondition extends Activity {
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                object_ConditionOfAdoptPet l_object_ConditionOfAdoptPet_objA = new object_ConditionOfAdoptPet();
-                l_object_ConditionOfAdoptPet_objA.setConditionAge(edTxt_conditionAge.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionEconomy(edTxt_conditionEconomy.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionHome(edTxt_conditionHome.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionFamily(edTxt_conditionFamily.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionReply(edTxt_conditionReply.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionPaper(edTxt_conditionPaper.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionFee(edTxt_conditionFee.getText().toString());
-                l_object_ConditionOfAdoptPet_objA.setConditionOther(edTxt_conditionOther.getText().toString());
-                Intent intent = getIntent();
-                intent.putExtra("l_object_ConditionOfAdoptPet_objA",l_object_ConditionOfAdoptPet_objA);
-                setResult(CDictionary.IntentRqCodeOfPetAdoptCondition,intent);
+
                 finish();
             }
         });
