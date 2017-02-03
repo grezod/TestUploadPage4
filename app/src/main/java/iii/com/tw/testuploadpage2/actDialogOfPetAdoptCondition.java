@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import static iii.com.tw.testuploadpage2.R.id.btnSubmit;
+
 public class actDialogOfPetAdoptCondition extends Activity {
 
     @Override
@@ -30,6 +32,18 @@ public class actDialogOfPetAdoptCondition extends Activity {
         edTxt_conditionFee=(EditText)findViewById(R.id.edTxt_conditionFee);
         edTxt_conditionOther=(EditText)findViewById(R.id.edTxt_conditionOther);
         //*****
+        Intent l_intent = getIntent();
+        object_ConditionOfAdoptPet l_object_ConditionOfAdoptPet = (object_ConditionOfAdoptPet)l_intent.getSerializableExtra("l_object_ConditionOfAdoptPet_objA");
+        if(l_object_ConditionOfAdoptPet != null){
+            edTxt_conditionAge.setText(l_object_ConditionOfAdoptPet.getConditionAge());
+            edTxt_conditionEconomy.setText(l_object_ConditionOfAdoptPet.getConditionEconomy());
+            edTxt_conditionHome.setText(l_object_ConditionOfAdoptPet.getConditionHome());
+            edTxt_conditionFamily.setText(l_object_ConditionOfAdoptPet.getConditionFamily());
+            edTxt_conditionReply.setText(l_object_ConditionOfAdoptPet.getConditionReply());
+            edTxt_conditionPaper.setText(l_object_ConditionOfAdoptPet.getConditionPaper());
+            edTxt_conditionFee.setText(l_object_ConditionOfAdoptPet.getConditionFee());
+            edTxt_conditionOther.setText(l_object_ConditionOfAdoptPet.getConditionOther());
+        }
         //********
         Button btnSubmit =(Button)findViewById(R.id.btnSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {

@@ -117,6 +117,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 case R.id.btnAdoptCondition:
                     Log.d("123","btnAdoptCondition");
                     Intent intent = new Intent(ScrollingActivity.this,actDialogOfPetAdoptCondition.class);
+                    intent.putExtra("l_object_ConditionOfAdoptPet_objA",iv_object_conditionOfAdoptPet_a);
                     startActivityForResult(intent,CDictionary.IntentRqCodeOfPetAdoptCondition);
                     break;
             }
