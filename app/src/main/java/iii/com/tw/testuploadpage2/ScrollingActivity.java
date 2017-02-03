@@ -143,7 +143,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //***
+        //******如果是彈跳視窗的回應********************************
         if(resultCode == CDictionary.IntentRqCodeOfPetAdoptCondition){
              iv_object_conditionOfAdoptPet_a =
                     (object_ConditionOfAdoptPet)data.getSerializableExtra("l_object_ConditionOfAdoptPet_objA");
@@ -156,7 +156,7 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
 
-        //**
+        //***********如果是圖片按鈕的回應************************
 
         if (resultCode == RESULT_OK) {
 
@@ -434,6 +434,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 Log.d("editor",bbcode);
                 //**
                 Toast.makeText(ScrollingActivity.this,data.optString("link"),Toast.LENGTH_LONG).show();
+                Log.d("imgSite",link);
                 //**
 
             }
