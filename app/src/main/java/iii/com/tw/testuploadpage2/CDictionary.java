@@ -5,6 +5,6 @@ package iii.com.tw.testuploadpage2;
  */
 
 public class CDictionary {
-    static int IntentRCodeOfPetAdoptCondition = 0;
-    static int IntentRCodeOfOpenAlbum = 1;
+    static int IntentRqCodeOfPetAdoptCondition = 0;
+    static int IntentRqCodeOfOpenAlbum = 1;
 }

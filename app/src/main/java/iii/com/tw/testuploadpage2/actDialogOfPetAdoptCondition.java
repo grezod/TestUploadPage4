@@ -1,10 +1,12 @@
 package iii.com.tw.testuploadpage2;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class actDialogOfPetAdoptCondition extends Activity {
 
@@ -12,12 +14,50 @@ public class actDialogOfPetAdoptCondition extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_act_dialog_of_pet_adopt_condition);
+        init();
+
+
+    }
+
+    private void init() {
+
+        edTxt_conditionAge=(EditText)findViewById(R.id.edTxt_conditionAge);
+        edTxt_conditionEconomy=(EditText)findViewById(R.id.edTxt_conditionEconomy);
+        edTxt_conditionHome=(EditText)findViewById(R.id.edTxt_conditionHome);
+        edTxt_conditionFamily=(EditText)findViewById(R.id.edTxt_conditionFamily);
+        edTxt_conditionReply=(EditText)findViewById(R.id.edTxt_conditionReply);
+        edTxt_conditionPaper=(EditText)findViewById(R.id.edTxt_conditionPaper);
+        edTxt_conditionFee=(EditText)findViewById(R.id.edTxt_conditionFee);
+        edTxt_conditionOther=(EditText)findViewById(R.id.edTxt_conditionOther);
+        //*****
+        //********
         Button btnSubmit =(Button)findViewById(R.id.btnSubmit);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                object_ConditionOfAdoptPet l_object_ConditionOfAdoptPet_objA = new object_ConditionOfAdoptPet();
+                l_object_ConditionOfAdoptPet_objA.setConditionAge(edTxt_conditionAge.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionEconomy(edTxt_conditionEconomy.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionHome(edTxt_conditionHome.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionFamily(edTxt_conditionFamily.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionReply(edTxt_conditionReply.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionPaper(edTxt_conditionPaper.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionFee(edTxt_conditionFee.getText().toString());
+                l_object_ConditionOfAdoptPet_objA.setConditionOther(edTxt_conditionOther.getText().toString());
+                Intent intent = getIntent();
+                intent.putExtra("l_object_ConditionOfAdoptPet_objA",l_object_ConditionOfAdoptPet_objA);
+                setResult(CDictionary.IntentRqCodeOfPetAdoptCondition,intent);
                 finish();
             }
         });
+        //*********
     }
+    EditText edTxt_conditionAge;
+    EditText edTxt_conditionEconomy;
+    EditText edTxt_conditionHome;
+    EditText edTxt_conditionFamily;
+    EditText edTxt_conditionReply;
+    EditText edTxt_conditionPaper;
+    EditText edTxt_conditionFee;
+    EditText edTxt_conditionOther;
 }

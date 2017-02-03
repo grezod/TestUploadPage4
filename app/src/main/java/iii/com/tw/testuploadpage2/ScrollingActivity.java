@@ -53,6 +53,8 @@ import  com.google.gson.Gson;
 //*******
 
 public class ScrollingActivity extends AppCompatActivity {
+    //*
+    object_ConditionOfAdoptPet iv_object_conditionOfAdoptPet_a;
     //**
     public static ScrollingActivity scrollingActivity;
     //***
@@ -78,6 +80,8 @@ public class ScrollingActivity extends AppCompatActivity {
     Bitmap bitmap3;
     Bitmap bitmap4;
     Bitmap bitmap5;
+    //***
+    object_ConditionOfAdoptPet object_conditionOfAdoptPet;
     //**
     Bitmap[] bitmapArray = {bitmap1,bitmap2,bitmap3,bitmap4,bitmap5};
     boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
@@ -113,7 +117,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 case R.id.btnAdoptCondition:
                     Log.d("123","btnAdoptCondition");
                     Intent intent = new Intent(ScrollingActivity.this,actDialogOfPetAdoptCondition.class);
-                    startActivity(intent);
+                    startActivityForResult(intent,CDictionary.IntentRqCodeOfPetAdoptCondition);
                     break;
             }
 
@@ -138,7 +142,17 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        //***
+        if(resultCode == CDictionary.IntentRqCodeOfPetAdoptCondition){
+             iv_object_conditionOfAdoptPet_a =
+                    (object_ConditionOfAdoptPet)data.getSerializableExtra("l_object_ConditionOfAdoptPet_objA");
 
+            //**
+            Log.d("test",iv_object_conditionOfAdoptPet_a.toString());
+            //*
+
+
+        }
 
 
         //**
