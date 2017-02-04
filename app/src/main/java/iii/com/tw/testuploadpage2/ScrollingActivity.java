@@ -11,9 +11,11 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 //import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
 
 
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -39,7 +41,15 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import cz.msebera.android.httpclient.Header;
 //***********
@@ -54,6 +64,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 //************
 import  com.google.gson.Gson;
+import com.loopj.android.http.SyncHttpClient;
 
 //*******
 
@@ -89,6 +100,9 @@ public class ScrollingActivity extends AppCompatActivity {
     object_ConditionOfAdoptPet object_conditionOfAdoptPet;
     //**
     Gson iv_gson;
+    //**
+    AlertDialog iv_ADialog_a;
+    AlertDialog iv_ADialog_b;
     //**
     Bitmap[] bitmapArray = {bitmap1,bitmap2,bitmap3,bitmap4,bitmap5};
     boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
@@ -149,6 +163,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         }
     };
+    private int iv_int_countHowManyPicNeedUpload;
 
     //****
     @Override
@@ -228,6 +243,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         break;
                 }
                 //**
+                iv_int_countHowManyPicNeedUpload +=1;
                 imgBtn.setImageBitmap(bitmap);
                 //**
 
@@ -259,6 +275,7 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void init() {
+        iv_int_countHowManyPicNeedUpload =0;
         iv_ArrayList_object_ConditionOfAdoptPet = new ArrayList<>();
         iv_ArrayList_object_OfPictureImgurSite = new ArrayList<>();
         iv_gson= new Gson();
@@ -272,14 +289,20 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               new android.support.v7.app.AlertDialog.Builder(ScrollingActivity.this)
+                 iv_ADialog_a=new AlertDialog.Builder(ScrollingActivity.this)
                        .setMessage("是否確定送出資料")
                        .setTitle("送出確認")
                        .setPositiveButton("送出", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
-                               Toast.makeText(ScrollingActivity.this,"使用者按下確認",Toast.LENGTH_SHORT).show();
-                               uploadImageAndGetSiteBack();
+
+                               Toast.makeText(ScrollingActivity.this,"正在上傳您的資料,請稍後...",Toast.LENGTH_LONG).show();
+                               try {
+                                   Log.d("test","進入TRY");
+                                   uploadImageAndGetSiteBack();
+                               } catch (Exception e) {
+                                   e.printStackTrace();
+                               }
                                addAllDataToDBServer();
 
                            }
@@ -360,7 +383,7 @@ public class ScrollingActivity extends AppCompatActivity {
         l_PetData_PetObj.setAnimalNote(edTxt_animalNote.getText().toString());
         l_PetData_PetObj.setAnimalReason(edTxt_animalReason.getText().toString());
         l_PetData_PetObj.setAnimalData_Condition(iv_ArrayList_object_ConditionOfAdoptPet);
-        l_PetData_PetObj.setAnimalData_Pic(null);
+        l_PetData_PetObj.setAnimalData_Pic(iv_ArrayList_object_OfPictureImgurSite);
         //****************
         Gson l_gsn_gson = new Gson();
         String l_strPetDataObjToJSONString = l_gsn_gson.toJson(l_PetData_PetObj);
@@ -414,24 +437,48 @@ public class ScrollingActivity extends AppCompatActivity {
 
     }
 
-    private void uploadImageAndGetSiteBack() {
+    private void uploadImageAndGetSiteBack() throws Exception {
+        //**********
+
+        iv_ADialog_a.dismiss();
+
+
+        //********
+
+        CountDownLatch latch=new CountDownLatch(iv_int_countHowManyPicNeedUpload);//N个工人的协作
+
+        Log.d("","進入uploadImageAndGetSiteBack");
+
+
         for (int i = 0; i < selectedImgForUploadArray.length; i++) {
 
             if(selectedImgForUploadArray[i] == true){
+
                // Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
                 String bitmapStream = transBitmapToStream(bitmapArray[i]);
-                imgurUpload(bitmapStream);
+                //imgurUpload(bitmapStream);
+                Log.d(" 進入迴圈",String.valueOf(selectedImgForUploadArray.length));
+                uploadImgByCallable l_uploadImgByCallable = new uploadImgByCallable(bitmapStream,latch);
+                l_uploadImgByCallable.start();
             }
+
         }
+
+        latch.await();
+        Log.d(" await完畢"," ");
+
     }
 
     private void imgurUpload(final String image){ //插入圖片
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+        Date date = new Date();
+        String strDate = sdFormat.format(date);
         Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
         //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
         String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
         String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
-        String titleString = "hihi45454545"; //設定圖片的標題
+        String titleString = "GetPet"+strDate; //設定圖片的標題
 
 
         AsyncHttpClient client0 = new AsyncHttpClient();
@@ -542,4 +589,89 @@ public class ScrollingActivity extends AppCompatActivity {
     EditText edTxt_animalAdoptedDate;
     EditText edTxt_animalNote;
     //***********************
+
+    class uploadImgByCallable extends Thread {
+        String image;
+        CountDownLatch latch;
+        public uploadImgByCallable(String p_image,CountDownLatch p_latch){
+            this.image = p_image;
+            this.latch = p_latch;
+        }
+
+        @Override
+        public void run() {
+            Log.d(" 進入線程"," 進入線程");
+
+            imgurUploadInClass(image);
+
+        }
+
+
+        private void imgurUploadInClass(final String image){ //插入圖片
+            Log.d(" 進入imgurUpload"," 進入imgurUpload");
+           // SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            //Date date = new Date();
+            //String strDate = sdFormat.format(date);
+            Log.d(" 1進入imgurUpload"," 進入imgurUpload");
+            //Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
+            //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
+            String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
+            String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
+            String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
+            String titleString = "GetPet"; //設定圖片的標題
+
+
+            SyncHttpClient client0 = new SyncHttpClient();
+            client0.addHeader("X-Mashape-Key", mashapeKey);
+            client0.addHeader("Authorization", "Client-ID "+clientId);
+            client0.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            RequestParams params = new RequestParams();
+            params.put("title", titleString);
+            params.put("image", image);
+            Log.d(" 準備POST"," ");
+
+            client0.post(urlString, params, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                    if (!response.optBoolean("success") || !response.has("data")) {
+                        Log.d("editor", "response: "+response.toString());
+
+                        return;
+                    }
+
+
+                    JSONObject data = response.optJSONObject("data");
+                    String link = data.optString("link","");
+                    int width = data.optInt("width",0);
+                    int height = data.optInt("height",0);
+                    String bbcode = "[img="+width+"x"+height+"]"+link+"[/img]";
+
+                    // Log.d("editor",data.optString("link"));
+                    // Log.d("editor",bbcode);
+                    //**
+
+                    Log.d("imgSite",link);
+                    //**
+                    object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
+
+
+                    iv_ArrayList_object_OfPictureImgurSite.add(l_object_OfPictureImgurSite);
+                    latch.countDown();
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
+
+                    Log.d("上傳圖片失敗","");
+                }
+            });
+
+            Log.d("到底?","");
+
+        }
+    }
+
 }
