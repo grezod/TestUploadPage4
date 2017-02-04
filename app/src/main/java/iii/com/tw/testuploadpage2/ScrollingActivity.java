@@ -476,8 +476,8 @@ public class ScrollingActivity extends AppCompatActivity {
         Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
         //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
-        String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
-        String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
+        String mashapeKey = ""; //設定自己的 Mashape Key
+        String clientId = ""; //設定自己的 Clinet ID
         String titleString = "GetPet"+strDate; //設定圖片的標題
 
 
@@ -609,16 +609,16 @@ public class ScrollingActivity extends AppCompatActivity {
 
         private void imgurUploadInClass(final String image){ //插入圖片
             Log.d(" 進入imgurUpload"," 進入imgurUpload");
-           // SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
-            //Date date = new Date();
-            //String strDate = sdFormat.format(date);
+            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            Date date = new Date();
+            String strDate = sdFormat.format(date);
             Log.d(" 1進入imgurUpload"," 進入imgurUpload");
             //Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
             //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
             String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
-            String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
-            String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
-            String titleString = "GetPet"; //設定圖片的標題
+            String mashapeKey = ""; //設定自己的 Mashape Key
+            String clientId = ""; //設定自己的 Clinet ID
+            String titleString = "GetPet"+strDate; //設定圖片的標題
 
 
             SyncHttpClient client0 = new SyncHttpClient();
