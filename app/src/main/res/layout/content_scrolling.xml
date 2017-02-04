@@ -100,6 +100,7 @@
             android:text="年齡" />
         <EditText
             android:layout_weight="1"
+            android:inputType="number"
             android:id="@+id/edTxt_animalAge"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"

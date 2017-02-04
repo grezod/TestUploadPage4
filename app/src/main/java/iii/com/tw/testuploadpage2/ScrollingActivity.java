@@ -1,6 +1,7 @@
 package iii.com.tw.testuploadpage2;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -121,23 +122,23 @@ public class ScrollingActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.imgBtn1:
                     IntentRCodeOfOpenAlbum = requestCodeImgBtn1;
-                    Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn1)",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn1)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn2:
                     IntentRCodeOfOpenAlbum = requestCodeImgBtn2;
-                    Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn2)",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn2)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn3:
                     IntentRCodeOfOpenAlbum = requestCodeImgBtn3;
-                    Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn3)",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn3)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn4:
                     IntentRCodeOfOpenAlbum = requestCodeImgBtn4;
-                    Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn4)",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn4)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.imgBtn5:
                     IntentRCodeOfOpenAlbum = requestCodeImgBtn5;
-                    Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn5)",Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn5)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btnAdoptCondition:
                     Log.d("123","btnAdoptCondition");
@@ -148,7 +149,7 @@ public class ScrollingActivity extends AppCompatActivity {
             }
 
             if(v.getId()!=R.id.btnAdoptCondition){
-                Toast.makeText(ScrollingActivity.this,String.valueOf(IntentRCodeOfOpenAlbum),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ScrollingActivity.this,String.valueOf(IntentRCodeOfOpenAlbum),Toast.LENGTH_SHORT).show();
 
                 //**
                 Intent intent = new Intent();
@@ -243,7 +244,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         break;
                 }
                 //**
-                iv_int_countHowManyPicNeedUpload +=1;
+
                 imgBtn.setImageBitmap(bitmap);
                 //**
 
@@ -295,6 +296,17 @@ public class ScrollingActivity extends AppCompatActivity {
                        .setPositiveButton("送出", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
+                               //***********
+                               ProgressDialog progressBar;
+//宣告
+                               progressBar = new ProgressDialog(ScrollingActivity.this);
+                               progressBar.setCancelable(true);
+                               progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                               progressBar.setMessage("載入中");
+
+//顯示
+                               progressBar.show();
+                               //**********
 
                                Toast.makeText(ScrollingActivity.this,"正在上傳您的資料,請稍後...",Toast.LENGTH_LONG).show();
                                try {
@@ -438,10 +450,24 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
     private void uploadImageAndGetSiteBack() throws Exception {
+
+        //***************
+
         //**********
+        iv_int_countHowManyPicNeedUpload = 0;
 
         iv_ADialog_a.dismiss();
+        {
+            for (int i = 0; i < selectedImgForUploadArray.length; i++) {
 
+                if (selectedImgForUploadArray[i] == true) {
+                    iv_int_countHowManyPicNeedUpload += 1;
+                    Toast.makeText(ScrollingActivity.this,"資料上傳中 請稍後....",Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+        }
 
         //********
 
@@ -473,7 +499,6 @@ public class ScrollingActivity extends AppCompatActivity {
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
         Date date = new Date();
         String strDate = sdFormat.format(date);
-        Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
         //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
         String mashapeKey = ""; //設定自己的 Mashape Key
@@ -499,7 +524,7 @@ public class ScrollingActivity extends AppCompatActivity {
                     Toast.makeText(ScrollingActivity.this,"fail", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Toast.makeText(ScrollingActivity.this,"in On Success", Toast.LENGTH_SHORT).show();
+
 
                 JSONObject data = response.optJSONObject("data");
                 String link = data.optString("link","");
@@ -510,7 +535,7 @@ public class ScrollingActivity extends AppCompatActivity {
                // Log.d("editor",data.optString("link"));
                // Log.d("editor",bbcode);
                 //**
-                Toast.makeText(ScrollingActivity.this,data.optString("link"),Toast.LENGTH_LONG).show();
+
                 Log.d("imgSite",link);
                 //**
                 object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
@@ -522,7 +547,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
-                Toast.makeText(ScrollingActivity.this,"Error: " + statusCode + " " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -613,7 +638,7 @@ public class ScrollingActivity extends AppCompatActivity {
             Date date = new Date();
             String strDate = sdFormat.format(date);
             Log.d(" 1進入imgurUpload"," 進入imgurUpload");
-            //Toast.makeText(ScrollingActivity.this,"in Imgur Upload", Toast.LENGTH_SHORT).show();
+
             //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
             String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
             String mashapeKey = ""; //設定自己的 Mashape Key
