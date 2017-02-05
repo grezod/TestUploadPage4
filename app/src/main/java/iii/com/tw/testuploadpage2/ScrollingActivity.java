@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -186,6 +187,8 @@ public class ScrollingActivity extends AppCompatActivity {
         //***********如果是圖片按鈕的回應************************
 
         if (resultCode == RESULT_OK) {
+            //****
+            Bitmap mScaleBitmap=null;
 
             ///*************
             Log.d("OK","OK");
@@ -205,6 +208,30 @@ public class ScrollingActivity extends AppCompatActivity {
                 //取得圖片控制項ImageView
                 //ImageButton imageView = (ImageButton) findViewById(R.id.imgBtn1);
                 // 將Bitmap設定到ImageView
+                //*****************
+
+
+
+                float mScale = 1 ;
+
+                //如果圖片寬度大於手機寬度則進行縮放，否則直接將圖片放入ImageView內
+                if(bitmap.getWidth() >= 480 ) {
+                    //判斷縮放比例
+                    mScale = (float)480/bitmap.getWidth();
+                }
+
+                    Matrix mMat = new Matrix() ;
+                    mMat.setScale(mScale, mScale);
+
+                     mScaleBitmap = Bitmap.createBitmap(bitmap,
+                            0,
+                            0,
+                            bitmap.getWidth(),
+                            bitmap.getHeight(),
+                            mMat,
+                            false);
+
+
 
                 //***************
 
@@ -215,37 +242,39 @@ public class ScrollingActivity extends AppCompatActivity {
                         imgBtn = (ImageButton) findViewById(R.id.imgBtn1);
                         //selectedImgForUpload1 = true;
                         selectedImgForUploadArray[0] = true;
-                        bitmapArray[0] = bitmap;
+                        bitmapArray[0] = mScaleBitmap;
                         //Toast.makeText(ScrollingActivity.this, selectedImgForUpload1==true? "TrueY":"FalseY", Toast.LENGTH_SHORT).show();
                         break;
                     case requestCodeImgBtn2:
                         imgBtn = (ImageButton) findViewById(R.id.imgBtn2);
                         selectedImgForUploadArray[1] = true;
-                        bitmapArray[1] = bitmap;
+                        bitmapArray[1] = mScaleBitmap;
                         //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn2)", Toast.LENGTH_SHORT).show();
                         break;
                     case requestCodeImgBtn3:
                         imgBtn = (ImageButton) findViewById(R.id.imgBtn3);
                         selectedImgForUploadArray[2] = true;
-                        bitmapArray[2] = bitmap;
+                        bitmapArray[2] = mScaleBitmap;
                         //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn3)", Toast.LENGTH_SHORT).show();
                         break;
                     case requestCodeImgBtn4:
                         imgBtn = (ImageButton) findViewById(R.id.imgBtn4);
                         selectedImgForUploadArray[3] = true;
-                        bitmapArray[3] = bitmap;
+                        bitmapArray[3] = mScaleBitmap;
                         //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn4)", Toast.LENGTH_SHORT).show();
                         break;
                     case requestCodeImgBtn5:
                         imgBtn = (ImageButton) findViewById(R.id.imgBtn5);
                         selectedImgForUploadArray[4] = true;
-                        bitmapArray[4] = bitmap;
+                        bitmapArray[4] = mScaleBitmap;
                         //Toast.makeText(ScrollingActivity.this, "String.valueOf(R.id.imgBtn5)", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 //**
 
-                imgBtn.setImageBitmap(bitmap);
+                imgBtn.setImageBitmap(mScaleBitmap);
+                Log.d("mScaleBitmapSize",""+mScaleBitmap.getWidth()+"  and "+mScaleBitmap.getHeight());
+                Log.d("bitmapSize",""+bitmap.getWidth()+"  and "+bitmap.getHeight());
                 //**
 
             } catch (FileNotFoundException e) {
@@ -296,19 +325,10 @@ public class ScrollingActivity extends AppCompatActivity {
                        .setPositiveButton("送出", new DialogInterface.OnClickListener() {
                            @Override
                            public void onClick(DialogInterface dialog, int which) {
-                               //***********
-                               ProgressDialog progressBar;
-//宣告
-                               progressBar = new ProgressDialog(ScrollingActivity.this);
-                               progressBar.setCancelable(true);
-                               progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                               progressBar.setMessage("載入中");
 
-//顯示
-                               progressBar.show();
-                               //**********
 
                                Toast.makeText(ScrollingActivity.this,"正在上傳您的資料,請稍後...",Toast.LENGTH_LONG).show();
+
                                try {
                                    Log.d("test","進入TRY");
                                    uploadImageAndGetSiteBack();
@@ -627,6 +647,7 @@ public class ScrollingActivity extends AppCompatActivity {
         public void run() {
             Log.d(" 進入線程"," 進入線程");
 
+
             imgurUploadInClass(image);
 
         }
@@ -699,4 +720,20 @@ public class ScrollingActivity extends AppCompatActivity {
         }
     }
 
+
+
 }
+
+/*
+    //***********
+    ProgressDialog progressBar;
+//宣告
+progressBar = new ProgressDialog(ScrollingActivity.this);
+        progressBar.setCancelable(true);
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setMessage("載入中");
+
+//顯示
+        progressBar.show();
+//**********
+*/
