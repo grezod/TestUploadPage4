@@ -433,6 +433,7 @@ public class ScrollingActivity extends AppCompatActivity {
     //*********************
 
     private void init() {
+
         Factory_DynamicAnimalTypeListCreator("");
         iv_int_countHowManyPicNeedUpload =0;
         iv_ArrayList_object_ConditionOfAdoptPet = new ArrayList<>();
