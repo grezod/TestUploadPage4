@@ -26,6 +26,12 @@
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <Spinner
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_animalKind"/>
+
         <TextView
             android:layout_weight="1"
             android:layout_width="wrap_content"
@@ -39,6 +45,12 @@
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <Spinner
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_animalType"/>
+
         <TextView
             android:layout_weight="1"
             android:layout_width="wrap_content"
@@ -59,6 +71,11 @@
             android:layout_marginLeft="10dp"
             android:textSize="23dp"
             android:text="所在地" />
+        <Spinner
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_animalArea"/>
         <EditText
             android:layout_weight="1"
             android:id="@+id/edTxt_animalAddress"

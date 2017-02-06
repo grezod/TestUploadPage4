@@ -29,6 +29,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -356,7 +357,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
     private void setViewComponent() {
         edTxt_animalKind = (EditText)findViewById(R.id.edTxt_animalKind);
-        edTxt_animalType = (EditText)findViewById(R.id.edTxt_animalKind);
+        edTxt_animalType = (EditText)findViewById(R.id.edTxt_animalType);
         edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
         edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
         edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
@@ -609,35 +610,6 @@ public class ScrollingActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //*********************
-    ImageButton imgBtn1;
-    ImageButton imgBtn2;
-    ImageButton imgBtn3;
-    ImageButton imgBtn4;
-    ImageButton imgBtn5;
-    Button btnAdoptCondition;
-    ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
-    //*********************
-    EditText edTxt_animalID;
-    EditText edTxt_animalKind;
-    EditText edTxt_animalType;
-    EditText edTxt_animalName;
-    EditText edTxt_animalAddress;
-    EditText edTxt_animalDate;
-    EditText edTxt_animalGender;
-    EditText edTxt_animalAge;
-    EditText edTxt_animalColor;
-    EditText edTxt_animalBirth;
-    EditText edTxt_animalChip;
-    EditText edTxt_animalHealthy;
-    EditText edTxt_animalDisease_Other;
-    EditText edTxt_animalOwner_userID;
-    EditText edTxt_animalReason;
-    EditText edTxt_animalGetter_userID;
-    EditText edTxt_animalAdopted;
-    EditText edTxt_animalAdoptedDate;
-    EditText edTxt_animalNote;
-    //***********************
 
     class uploadImgByCallable extends Thread {
         String image;
@@ -723,6 +695,42 @@ public class ScrollingActivity extends AppCompatActivity {
 
         }
     }
+
+
+
+    //*********************
+    ImageButton imgBtn1;
+    ImageButton imgBtn2;
+    ImageButton imgBtn3;
+    ImageButton imgBtn4;
+    ImageButton imgBtn5;
+    Button btnAdoptCondition;
+    ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
+    //*********************
+    EditText edTxt_animalID;
+    EditText edTxt_animalKind;
+    EditText edTxt_animalType;
+    EditText edTxt_animalName;
+    EditText edTxt_animalAddress;
+    EditText edTxt_animalDate;
+    EditText edTxt_animalGender;
+    EditText edTxt_animalAge;
+    EditText edTxt_animalColor;
+    EditText edTxt_animalBirth;
+    EditText edTxt_animalChip;
+    EditText edTxt_animalHealthy;
+    EditText edTxt_animalDisease_Other;
+    EditText edTxt_animalOwner_userID;
+    EditText edTxt_animalReason;
+    EditText edTxt_animalGetter_userID;
+    EditText edTxt_animalAdopted;
+    EditText edTxt_animalAdoptedDate;
+    EditText edTxt_animalNote;
+    //***********************
+    Spinner spinner_animalArea=(Spinner)findViewById(R.id.spinner_animalArea);
+    Spinner spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
+    Spinner spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
+    //*******
 
 
 
