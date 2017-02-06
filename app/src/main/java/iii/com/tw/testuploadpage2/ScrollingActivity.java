@@ -356,6 +356,13 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
     private void setViewComponent() {
+
+
+        //**********
+         spinner_animalArea=(Spinner)findViewById(R.id.spinner_animalArea);
+         spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
+         spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
+        //**********
         edTxt_animalKind = (EditText)findViewById(R.id.edTxt_animalKind);
         edTxt_animalType = (EditText)findViewById(R.id.edTxt_animalType);
         edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
@@ -727,9 +734,9 @@ public class ScrollingActivity extends AppCompatActivity {
     EditText edTxt_animalAdoptedDate;
     EditText edTxt_animalNote;
     //***********************
-    Spinner spinner_animalArea=(Spinner)findViewById(R.id.spinner_animalArea);
-    Spinner spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
-    Spinner spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
+    Spinner spinner_animalArea;
+    Spinner spinner_animalKind;
+    Spinner spinner_animalType;
     //*******
 
 
