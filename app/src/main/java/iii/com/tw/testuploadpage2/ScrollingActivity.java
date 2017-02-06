@@ -14,6 +14,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static iii.com.tw.testuploadpage2.R.id.spinner_animalArea;
+import static iii.com.tw.testuploadpage2.R.id.spinner_animalKind;
 //import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
 
 
@@ -26,9 +28,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -72,6 +76,9 @@ import com.loopj.android.http.SyncHttpClient;
 //*******
 
 public class ScrollingActivity extends AppCompatActivity {
+
+    //**
+    Factory_DynamicAnimalTypeListCreator iv_Factory_DynamicAnimalTypeListCreator ;
     //*
     object_ConditionOfAdoptPet iv_object_conditionOfAdoptPet_a;
     //**
@@ -116,9 +123,7 @@ public class ScrollingActivity extends AppCompatActivity {
             "南投縣", "雲林縣", "嘉義縣", "嘉義市", "臺南市", "高雄市",
             "屏東縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"};
 
-
-    //**
-
+    //*******
     private View.OnClickListener btn_click = new View.OnClickListener() {
         int IntentRCodeOfOpenAlbum = 0;
 
@@ -171,6 +176,26 @@ public class ScrollingActivity extends AppCompatActivity {
         }
     };
     private int iv_int_countHowManyPicNeedUpload;
+    //**********
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_scrolling);
+
+        int permission = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            //未取得權限，向使用者要求允許權限
+            ActivityCompat.requestPermissions( this,
+                    new String[]{READ_EXTERNAL_STORAGE},
+                    REQUEST_READ_STORAGE );
+        }else{
+            //已有權限，可進行檔案存取
+        }
+        init();
+
+    }
 
     //****
     @Override
@@ -289,31 +314,15 @@ public class ScrollingActivity extends AppCompatActivity {
        }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
 
-        int permission = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions( this,
-                    new String[]{READ_EXTERNAL_STORAGE},
-                    REQUEST_READ_STORAGE );
-        }else{
-            //已有權限，可進行檔案存取
-        }
-        init();
-
-    }
 
     private void init() {
         iv_int_countHowManyPicNeedUpload =0;
         iv_ArrayList_object_ConditionOfAdoptPet = new ArrayList<>();
         iv_ArrayList_object_OfPictureImgurSite = new ArrayList<>();
         iv_gson= new Gson();
+
+
         setViewComponent();
 
         //****************************
@@ -360,8 +369,34 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //**********
          spinner_animalArea=(Spinner)findViewById(R.id.spinner_animalArea);
+        ArrayAdapter<String> l_ArrayAdapter_spinner_animalArea = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, area); //selected item will look like a spinner set from XML
+        l_ArrayAdapter_spinner_animalArea.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_animalArea.setAdapter(l_ArrayAdapter_spinner_animalArea);
+
+        //**
+        if(new Factory_DynamicAnimalTypeListCreator("").getIv_ArrayList_動物類別清單()!=null){
+        Log.d("getIv_ArrayList_動物類別清單","Yes");}
+        else{
+            Log.d("getIv_ArrayList_動物類別清單","NO");
+        }
+
+/*
          spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
+        ArrayAdapter<String> l_ArrayAdapter_spinner_animalKind = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, iv_Factory_DynamicAnimalTypeListCreator.getIv_ArrayList_動物類別清單()); //selected item will look like a spinner set from XML
+        l_ArrayAdapter_spinner_animalKind.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_animalKind.setAdapter(l_ArrayAdapter_spinner_animalKind);
+        */
+
+
+        //**
+        /*
          spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
+        ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, iv_Factory_DynamicAnimalTypeListCreator.getIv_ArrayList_動物品種清單()); //selected item will look like a spinner set from XML
+        l_ArrayAdapter_spinner_animalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_animalArea.setAdapter(l_ArrayAdapter_spinner_animalType);
+        */
+
+        //**
         //**********
         edTxt_animalKind = (EditText)findViewById(R.id.edTxt_animalKind);
         edTxt_animalType = (EditText)findViewById(R.id.edTxt_animalType);
