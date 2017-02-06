@@ -110,6 +110,10 @@ public class ScrollingActivity extends AppCompatActivity {
     boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
     ArrayList<object_OfPictureImgurSite> iv_ArrayList_object_OfPictureImgurSite;
     ArrayList<object_ConditionOfAdoptPet> iv_ArrayList_object_ConditionOfAdoptPet;
+    final String[] area = {"全部","臺北市", "新北市", "基隆市", "宜蘭縣",
+            "桃園縣", "新竹縣", "新竹市", "苗栗縣", "臺中市", "彰化縣",
+            "南投縣", "雲林縣", "嘉義縣", "嘉義市", "臺南市", "高雄市",
+            "屏東縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"};
 
 
     //**
