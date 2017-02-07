@@ -391,6 +391,27 @@ public class ScrollingActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 switch英文的動物類別轉換為中文(iv_ArrayList_動物類別清單);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        //****************
+         spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
+        ArrayAdapter<String> l_ArrayAdapter_spinner_animalKind = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item, iv_ArrayList_動物類別清單); //selected item will look like a spinner set from XML
+        l_ArrayAdapter_spinner_animalKind.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_animalKind.setAdapter(l_ArrayAdapter_spinner_animalKind);
+
+
+
+                        //****************
+
+         spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
+        ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item,iv_Array_動物品種清單[0]); //selected item will look like a spinner set from XML
+        l_ArrayAdapter_spinner_animalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+         spinner_animalType.setAdapter(l_ArrayAdapter_spinner_animalType);
+
+                    }
+                });
             }
         });
 
@@ -495,21 +516,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
 
-/*
-         spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
-        ArrayAdapter<String> l_ArrayAdapter_spinner_animalKind = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, iv_Factory_DynamicAnimalTypeListCreator.getIv_ArrayList_動物類別清單()); //selected item will look like a spinner set from XML
-        l_ArrayAdapter_spinner_animalKind.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_animalKind.setAdapter(l_ArrayAdapter_spinner_animalKind);
-        */
 
-
-        //**
-        /*
-         spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
-        ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, iv_Factory_DynamicAnimalTypeListCreator.getIv_ArrayList_動物品種清單()); //selected item will look like a spinner set from XML
-        l_ArrayAdapter_spinner_animalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_animalArea.setAdapter(l_ArrayAdapter_spinner_animalType);
-        */
 
         //**
         //**********
