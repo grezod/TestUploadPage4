@@ -15,8 +15,12 @@ import android.support.v4.app.ActivityCompat;
 
 import static android.Manifest.permission.*;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import static iii.com.tw.testuploadpage2.R.id.edTxt_animalAddress;
+import static iii.com.tw.testuploadpage2.R.id.edTxt_animalAge;
 import static iii.com.tw.testuploadpage2.R.id.spinner_animalArea;
 import static iii.com.tw.testuploadpage2.R.id.spinner_animalKind;
+import static iii.com.tw.testuploadpage2.R.layout.activity_scrolling;
 //import static iii.com.tw.testuploadpage2.R.id.edTxt_animalData_animalTypeID;
 
 
@@ -75,7 +79,10 @@ import okhttp3.Response;
 import com.google.gson.Gson;
 import com.loopj.android.http.SyncHttpClient;
 
-//*******
+//*******CLASS與畫面配對
+//ScrollingActivity.java + activity_scrolling.xml
+// actDialogOfPetAdoptCondition.java + activity_act_dialog_of_pet_adopt_condition.xml
+//**********
 
 public class ScrollingActivity extends AppCompatActivity {
 
@@ -186,7 +193,7 @@ public class ScrollingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scrolling);
+        setContentView(activity_scrolling);
 
         int permission = ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -350,6 +357,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 //**
                 try {
                     l_JSONArray_jObj = new JSONArray(json);
+
                     iv_ArrayList_動物類別清單 = new ArrayList<String>();
                     //**
                     for (int i = 0; i < l_JSONArray_jObj.length(); i += 1) {
@@ -370,14 +378,10 @@ public class ScrollingActivity extends AppCompatActivity {
                         JSONObject l_JSONObject = (JSONObject) l_JSONArray_jObj.get(i);
                         for (int j = 1; j <= iv_ArrayList_動物類別清單.size(); j += 1) {
 
-                            //Log.d("1",l_JSONObject.getString("animalKind"));
-                            // Log.d("2",iv_ArrayList_動物類別清單.get(j-1));
-
-                            if (l_JSONObject.getString("animalKind").equals(iv_ArrayList_動物類別清單.get(j - 1))) {
+                            if (l_JSONObject.getString("animalKind").equals(iv_ArrayList_動物類別清單.get(j - 1)) && !iv_Array_動物品種清單[j - 1].contains(l_JSONObject.getString("animalType"))) {
                                 //iv_Array_動物品種清單[j-1].add(l_JSONObject.getString("animalType"));
                                 iv_Array_動物品種清單[j - 1].add(l_JSONObject.getString("animalType"));
                             }
-
                         }
                     }
 
@@ -414,9 +418,9 @@ public class ScrollingActivity extends AppCompatActivity {
                         });
 
 
-                                //****************
+                        //****************
 
-                                spinner_animalType = (Spinner) findViewById(R.id.spinner_animalType);
+                        spinner_animalType = (Spinner) findViewById(R.id.spinner_animalType);
                         ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item, iv_Array_動物品種清單[0]); //selected item will look like a spinner set from XML
                         l_ArrayAdapter_spinner_animalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner_animalType.setAdapter(l_ArrayAdapter_spinner_animalType);
@@ -488,17 +492,30 @@ public class ScrollingActivity extends AppCompatActivity {
                         .setPositiveButton("送出", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                               String l_string_未填寫的欄位有哪些= check確認是否欄位都有填寫();
+
+                                if (l_string_未填寫的欄位有哪些.length() > 10) {
+                                    new AlertDialog.Builder(ScrollingActivity.this)
+                                            .setMessage(l_string_未填寫的欄位有哪些)
+                                            .setTitle("欄位未填")
+                                            .setPositiveButton("確定", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
 
 
-                                Toast.makeText(ScrollingActivity.this, "正在上傳您的資料,請稍後...", Toast.LENGTH_LONG).show();
+                                                }
+                                            })
+                                            .show();
 
-                                try {
-                                    Log.d("test", "進入TRY");
-                                    uploadImageAndGetSiteBack();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                }else {
+                                    try {
+
+                                        uploadImageAndGetSiteBack();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    addAllDataToDBServer();
                                 }
-                                addAllDataToDBServer();
 
                             }
                         })
@@ -526,8 +543,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //**
         //**********
-        edTxt_animalKind = (EditText) findViewById(R.id.edTxt_animalKind);
-        edTxt_animalType = (EditText) findViewById(R.id.edTxt_animalType);
+
         edTxt_animalAddress = (EditText) findViewById(R.id.edTxt_animalAddress);
         edTxt_animalAge = (EditText) findViewById(R.id.edTxt_animalAge);
         edTxt_animalBirth = (EditText) findViewById(R.id.edTxt_animalBirth);
@@ -562,6 +578,27 @@ public class ScrollingActivity extends AppCompatActivity {
         btnAdoptCondition.setOnClickListener(btn_click);
     }
 
+    public String check確認是否欄位都有填寫() {
+
+        //************
+        String p_string_未填寫的欄位有哪些 = "尚未填寫以下欄位:\n";
+        Log.d("原始長度", p_string_未填寫的欄位有哪些.length() + "");
+        //*********
+        p_string_未填寫的欄位有哪些 += edTxt_animalName.getText().toString().isEmpty() ? "寵物姓名\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalAge.getText().toString().isEmpty() ? "寵物年齡\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalGender.getText().toString().isEmpty() ? "性別\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalChip.getText().toString().isEmpty() ? "是否植入晶片\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalHealthy.getText().toString().isEmpty() ? "健康狀態\n" : "";
+        p_string_未填寫的欄位有哪些 += spinner_animalArea.getSelectedItem().toString().equals("全部") ? "未選縣市\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalAddress.getText().toString().isEmpty() ? "詳細地址\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalColor.getText().toString().isEmpty() ? "毛色\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalDate.getText().toString().isEmpty() ? "送養日期\n" : "";
+        p_string_未填寫的欄位有哪些 += edTxt_animalReason.getText().toString().isEmpty() ? "送養理由\n" : "";
+
+        return p_string_未填寫的欄位有哪些;
+    }
+
+
     private void addAllDataToDBServer() {
         //******判斷使用者是否填寫領養條件
 
@@ -571,14 +608,12 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
         iv_ArrayList_object_ConditionOfAdoptPet.add(iv_object_conditionOfAdoptPet_a);
-
-
-        //************
+        //*********
         object_petDataForSelfDB l_PetData_PetObj = new object_petDataForSelfDB();
-        l_PetData_PetObj.setAnimalAddress(edTxt_animalAddress.getText().toString());
+        l_PetData_PetObj.setAnimalAddress(spinner_animalArea.getSelectedItem().toString() + edTxt_animalAddress.getText().toString());
         l_PetData_PetObj.setAnimalAge(edTxt_animalAge.getText().toString());
-        l_PetData_PetObj.setAnimalKind(edTxt_animalKind.getText().toString());
-        l_PetData_PetObj.setAnimalType((edTxt_animalType.getText().toString()));
+        l_PetData_PetObj.setAnimalKind(spinner_animalKind.getSelectedItem().toString());
+        l_PetData_PetObj.setAnimalType(spinner_animalType.getSelectedItem().toString());
         l_PetData_PetObj.setAnimalBirth(edTxt_animalBirth.getText().toString());
         l_PetData_PetObj.setAnimalChip(edTxt_animalChip.getText().toString());
         l_PetData_PetObj.setAnimalColor(edTxt_animalColor.getText().toString());
@@ -719,29 +754,17 @@ public class ScrollingActivity extends AppCompatActivity {
                     return;
                 }
 
-
                 JSONObject data = response.optJSONObject("data");
                 String link = data.optString("link", "");
                 int width = data.optInt("width", 0);
                 int height = data.optInt("height", 0);
-                String bbcode = "[img=" + width + "x" + height + "]" + link + "[/img]";
-
-                // Log.d("editor",data.optString("link"));
-                // Log.d("editor",bbcode);
-                //**
-
-                Log.d("imgSite", link);
                 //**
                 object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
-
-
                 iv_ArrayList_object_OfPictureImgurSite.add(l_object_OfPictureImgurSite);
-
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
-
             }
         });
 
@@ -829,40 +852,25 @@ public class ScrollingActivity extends AppCompatActivity {
 
                     if (!response.optBoolean("success") || !response.has("data")) {
                         Log.d("editor", "response: " + response.toString());
-
                         return;
                     }
-
 
                     JSONObject data = response.optJSONObject("data");
                     String link = data.optString("link", "");
                     int width = data.optInt("width", 0);
                     int height = data.optInt("height", 0);
-                    String bbcode = "[img=" + width + "x" + height + "]" + link + "[/img]";
-
-                    // Log.d("editor",data.optString("link"));
-                    // Log.d("editor",bbcode);
-                    //**
-
                     Log.d("imgSite", link);
                     //**
                     object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
-
-
                     iv_ArrayList_object_OfPictureImgurSite.add(l_object_OfPictureImgurSite);
                     latch.countDown();
-
                 }
-
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
 
                     Log.d("上傳圖片失敗", "");
                 }
             });
-
-            Log.d("到底?", "");
-
         }
     }
 
@@ -876,8 +884,6 @@ public class ScrollingActivity extends AppCompatActivity {
     ImageButton[] imgBtnArray = {imgBtn1, imgBtn2, imgBtn3, imgBtn4, imgBtn5};
     //*********************
     EditText edTxt_animalID;
-    EditText edTxt_animalKind;
-    EditText edTxt_animalType;
     EditText edTxt_animalName;
     EditText edTxt_animalAddress;
     EditText edTxt_animalDate;
@@ -902,17 +908,3 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
 }
-
-/*
-    //***********
-    ProgressDialog progressBar;
-//宣告
-progressBar = new ProgressDialog(ScrollingActivity.this);
-        progressBar.setCancelable(true);
-        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressBar.setMessage("載入中");
-
-//顯示
-        progressBar.show();
-//**********
-*/

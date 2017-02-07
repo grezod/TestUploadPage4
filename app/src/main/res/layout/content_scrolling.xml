@@ -20,12 +20,6 @@
             android:layout_marginLeft="10dp"
             android:textSize="23dp"
             android:text="寵物類別" />
-        <EditText
-            android:layout_weight="1"
-            android:id="@+id/edTxt_animalKind"
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
         <Spinner
             android:layout_weight="1"
             android:layout_width="wrap_content"
@@ -39,12 +33,7 @@
             android:layout_marginLeft="10dp"
             android:textSize="23dp"
             android:text="寵物品種" />
-        <EditText
-            android:layout_weight="1"
-            android:id="@+id/edTxt_animalType"
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
         <Spinner
             android:layout_weight="1"
             android:layout_width="wrap_content"
@@ -117,7 +106,6 @@
             android:text="年齡" />
         <EditText
             android:layout_weight="1"
-            android:inputType="number"
             android:id="@+id/edTxt_animalAge"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
