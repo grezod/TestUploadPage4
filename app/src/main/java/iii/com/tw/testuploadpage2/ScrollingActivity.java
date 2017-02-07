@@ -869,6 +869,7 @@ public class ScrollingActivity extends AppCompatActivity {
                 public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
 
                     Log.d("上傳圖片失敗", "");
+                    Log.d("上傳圖片失敗", "");
                 }
             });
         }
