@@ -12,6 +12,7 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+
 import static android.Manifest.permission.*;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static iii.com.tw.testuploadpage2.R.id.spinner_animalArea;
@@ -28,6 +29,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,7 +72,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 //************
-import  com.google.gson.Gson;
+import com.google.gson.Gson;
 import com.loopj.android.http.SyncHttpClient;
 
 //*******
@@ -96,11 +98,11 @@ public class ScrollingActivity extends AppCompatActivity {
     static final int requestCodeImgBtn4 = 1004;
     static final int requestCodeImgBtn5 = 1005;
     //**
-    boolean selectedImgForUpload1= false;
-    boolean selectedImgForUpload2= false;
-    boolean selectedImgForUpload3= false;
-    boolean selectedImgForUpload4= false;
-    boolean selectedImgForUpload5= false;
+    boolean selectedImgForUpload1 = false;
+    boolean selectedImgForUpload2 = false;
+    boolean selectedImgForUpload3 = false;
+    boolean selectedImgForUpload4 = false;
+    boolean selectedImgForUpload5 = false;
     //**
     Bitmap bitmap1;
     Bitmap bitmap2;
@@ -115,11 +117,11 @@ public class ScrollingActivity extends AppCompatActivity {
     AlertDialog iv_ADialog_a;
     AlertDialog iv_ADialog_b;
     //**
-    Bitmap[] bitmapArray = {bitmap1,bitmap2,bitmap3,bitmap4,bitmap5};
-    boolean[] selectedImgForUploadArray = {selectedImgForUpload1,selectedImgForUpload2,selectedImgForUpload3,selectedImgForUpload4,selectedImgForUpload5};
+    Bitmap[] bitmapArray = {bitmap1, bitmap2, bitmap3, bitmap4, bitmap5};
+    boolean[] selectedImgForUploadArray = {selectedImgForUpload1, selectedImgForUpload2, selectedImgForUpload3, selectedImgForUpload4, selectedImgForUpload5};
     ArrayList<object_OfPictureImgurSite> iv_ArrayList_object_OfPictureImgurSite;
     ArrayList<object_ConditionOfAdoptPet> iv_ArrayList_object_ConditionOfAdoptPet;
-    final String[] area = {"全部","臺北市", "新北市", "基隆市", "宜蘭縣",
+    final String[] area = {"全部", "臺北市", "新北市", "基隆市", "宜蘭縣",
             "桃園縣", "新竹縣", "新竹市", "苗栗縣", "臺中市", "彰化縣",
             "南投縣", "雲林縣", "嘉義縣", "嘉義市", "臺南市", "高雄市",
             "屏東縣", "花蓮縣", "臺東縣", "澎湖縣", "金門縣", "連江縣"};
@@ -133,7 +135,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
         @Override
         public void onClick(View v) {
-            switch (v.getId()){
+            switch (v.getId()) {
                 case R.id.imgBtn1:
                     IntentRCodeOfOpenAlbum = requestCodeImgBtn1;
                     //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn1)",Toast.LENGTH_SHORT).show();
@@ -155,14 +157,14 @@ public class ScrollingActivity extends AppCompatActivity {
                     //Toast.makeText(ScrollingActivity.this,"String.valueOf(R.id.imgBtn5)",Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btnAdoptCondition:
-                    Log.d("123","btnAdoptCondition");
-                    Intent intent = new Intent(ScrollingActivity.this,actDialogOfPetAdoptCondition.class);
-                    intent.putExtra("l_object_ConditionOfAdoptPet_objA",iv_object_conditionOfAdoptPet_a);
-                    startActivityForResult(intent,CDictionary.IntentRqCodeOfPetAdoptCondition);
+                    Log.d("123", "btnAdoptCondition");
+                    Intent intent = new Intent(ScrollingActivity.this, actDialogOfPetAdoptCondition.class);
+                    intent.putExtra("l_object_ConditionOfAdoptPet_objA", iv_object_conditionOfAdoptPet_a);
+                    startActivityForResult(intent, CDictionary.IntentRqCodeOfPetAdoptCondition);
                     break;
             }
 
-            if(v.getId()!=R.id.btnAdoptCondition){
+            if (v.getId() != R.id.btnAdoptCondition) {
                 //Toast.makeText(ScrollingActivity.this,String.valueOf(IntentRCodeOfOpenAlbum),Toast.LENGTH_SHORT).show();
 
                 //**
@@ -179,6 +181,7 @@ public class ScrollingActivity extends AppCompatActivity {
         }
     };
     private int iv_int_countHowManyPicNeedUpload;
+
     //**********
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -190,10 +193,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
             //未取得權限，向使用者要求允許權限
-            ActivityCompat.requestPermissions( this,
+            ActivityCompat.requestPermissions(this,
                     new String[]{READ_EXTERNAL_STORAGE},
-                    REQUEST_READ_STORAGE );
-        }else{
+                    REQUEST_READ_STORAGE);
+        } else {
             //已有權限，可進行檔案存取
         }
         init();
@@ -205,12 +208,12 @@ public class ScrollingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         //******如果是彈跳視窗的回應********************************
-        if(resultCode == CDictionary.IntentRqCodeOfPetAdoptCondition){
-             iv_object_conditionOfAdoptPet_a =
-                    (object_ConditionOfAdoptPet)data.getSerializableExtra("l_object_ConditionOfAdoptPet_objA");
+        if (resultCode == CDictionary.IntentRqCodeOfPetAdoptCondition) {
+            iv_object_conditionOfAdoptPet_a =
+                    (object_ConditionOfAdoptPet) data.getSerializableExtra("l_object_ConditionOfAdoptPet_objA");
 
             //**
-            Log.d("test",iv_object_conditionOfAdoptPet_a.toString());
+            Log.d("test", iv_object_conditionOfAdoptPet_a.toString());
             //*
 
 
@@ -221,10 +224,10 @@ public class ScrollingActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             //****
-            Bitmap mScaleBitmap=null;
+            Bitmap mScaleBitmap = null;
 
             ///*************
-            Log.d("OK","OK");
+            Log.d("OK", "OK");
 
             //取得圖檔的路徑位置
             Uri uri = data.getData();
@@ -244,31 +247,29 @@ public class ScrollingActivity extends AppCompatActivity {
                 //*****************
 
 
-
-                float mScale = 1 ;
+                float mScale = 1;
 
                 //如果圖片寬度大於手機寬度則進行縮放，否則直接將圖片放入ImageView內
-                if(bitmap.getWidth() >= 480 ) {
+                if (bitmap.getWidth() >= 480) {
                     //判斷縮放比例
-                    mScale = (float)480/bitmap.getWidth();
+                    mScale = (float) 480 / bitmap.getWidth();
                 }
 
-                    Matrix mMat = new Matrix() ;
-                    mMat.setScale(mScale, mScale);
+                Matrix mMat = new Matrix();
+                mMat.setScale(mScale, mScale);
 
-                     mScaleBitmap = Bitmap.createBitmap(bitmap,
-                            0,
-                            0,
-                            bitmap.getWidth(),
-                            bitmap.getHeight(),
-                            mMat,
-                            false);
-
+                mScaleBitmap = Bitmap.createBitmap(bitmap,
+                        0,
+                        0,
+                        bitmap.getWidth(),
+                        bitmap.getHeight(),
+                        mMat,
+                        false);
 
 
                 //***************
 
-                ImageButton imgBtn = (ImageButton)findViewById(R.id.imgBtn1);
+                ImageButton imgBtn = (ImageButton) findViewById(R.id.imgBtn1);
                 //**check requestCode to decide show image on which button
                 switch (requestCode) {
                     case requestCodeImgBtn1:
@@ -306,22 +307,22 @@ public class ScrollingActivity extends AppCompatActivity {
                 //**
 
                 imgBtn.setImageBitmap(mScaleBitmap);
-                Log.d("mScaleBitmapSize",""+mScaleBitmap.getWidth()+"  and "+mScaleBitmap.getHeight());
-                Log.d("bitmapSize",""+bitmap.getWidth()+"  and "+bitmap.getHeight());
+                Log.d("mScaleBitmapSize", "" + mScaleBitmap.getWidth() + "  and " + mScaleBitmap.getHeight());
+                Log.d("bitmapSize", "" + bitmap.getWidth() + "  and " + bitmap.getHeight());
                 //**
 
             } catch (FileNotFoundException e) {
-                Log.e("Exception", e.getMessage(),e);
+                Log.e("Exception", e.getMessage(), e);
             }
-         }
-       }
+        }
+    }
 
 
     //********
     public void Factory_DynamicAnimalTypeListCreator(String p_String_url) {
         OkHttpClient l_okHttpClient_client = new OkHttpClient();
 
-        if("".equals(p_String_url)){
+        if ("".equals(p_String_url)) {
             p_String_url = "http://twpetanimal.ddns.net:9487/api/v1/animalData_Type";
         }
 
@@ -351,40 +352,39 @@ public class ScrollingActivity extends AppCompatActivity {
                     l_JSONArray_jObj = new JSONArray(json);
                     iv_ArrayList_動物類別清單 = new ArrayList<String>();
                     //**
-                    for (int i =0;i<l_JSONArray_jObj.length();i+=1) {
+                    for (int i = 0; i < l_JSONArray_jObj.length(); i += 1) {
                         JSONObject l_JSONObject = (JSONObject) l_JSONArray_jObj.get(i);
-                        if(!iv_ArrayList_動物類別清單.contains(l_JSONObject.getString("animalKind"))){
+                        if (!iv_ArrayList_動物類別清單.contains(l_JSONObject.getString("animalKind"))) {
                             iv_ArrayList_動物類別清單.add(l_JSONObject.getString("animalKind"));
-                            Log.d("l_JSString(animalType)",l_JSONObject.getString("animalType"));
+                            Log.d("l_JSString(animalType)", l_JSONObject.getString("animalType"));
                         }
                     }
-                    Log.d("iv_ArrayList_動物類別清單",iv_ArrayList_動物類別清單.toString()+"共"+iv_ArrayList_動物類別清單.size()+"種");
+                    Log.d("iv_ArrayList_動物類別清單", iv_ArrayList_動物類別清單.toString() + "共" + iv_ArrayList_動物類別清單.size() + "種");
                     iv_Array_動物品種清單 = new ArrayList[iv_ArrayList_動物類別清單.size()];
-                    for (int j =1;j<=iv_ArrayList_動物類別清單.size();j+=1) {
-                        iv_Array_動物品種清單[j-1]=new ArrayList<String>();
+                    for (int j = 1; j <= iv_ArrayList_動物類別清單.size(); j += 1) {
+                        iv_Array_動物品種清單[j - 1] = new ArrayList<String>();
                     }
 
 
-                    for (int i =0;i<l_JSONArray_jObj.length();i+=1) {
+                    for (int i = 0; i < l_JSONArray_jObj.length(); i += 1) {
                         JSONObject l_JSONObject = (JSONObject) l_JSONArray_jObj.get(i);
-                        for (int j =1;j<=iv_ArrayList_動物類別清單.size();j+=1) {
+                        for (int j = 1; j <= iv_ArrayList_動物類別清單.size(); j += 1) {
 
                             //Log.d("1",l_JSONObject.getString("animalKind"));
                             // Log.d("2",iv_ArrayList_動物類別清單.get(j-1));
 
-                            if(l_JSONObject.getString("animalKind").equals(iv_ArrayList_動物類別清單.get(j-1))){
+                            if (l_JSONObject.getString("animalKind").equals(iv_ArrayList_動物類別清單.get(j - 1))) {
                                 //iv_Array_動物品種清單[j-1].add(l_JSONObject.getString("animalType"));
-                                iv_Array_動物品種清單[j-1].add(l_JSONObject.getString("animalType"));
+                                iv_Array_動物品種清單[j - 1].add(l_JSONObject.getString("animalType"));
                             }
 
                         }
                     }
 
-                    for (int i =1;i<=iv_ArrayList_動物類別清單.size();i+=1) {
+                    for (int i = 1; i <= iv_ArrayList_動物類別清單.size(); i += 1) {
                         //iv_Array_動物品種清單[i-1].toString();
-                        Log.d("第"+i+"份動物品種清單",iv_Array_動物品種清單[i-1].toString());
+                        Log.d("第" + i + "份動物品種清單", iv_Array_動物品種清單[i - 1].toString());
                     }
-
 
 
                 } catch (JSONException e) {
@@ -396,19 +396,30 @@ public class ScrollingActivity extends AppCompatActivity {
                     public void run() {
 
                         //****************
-         spinner_animalKind=(Spinner)findViewById(R.id.spinner_animalKind);
-        ArrayAdapter<String> l_ArrayAdapter_spinner_animalKind = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item, iv_ArrayList_動物類別清單); //selected item will look like a spinner set from XML
-        l_ArrayAdapter_spinner_animalKind.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_animalKind.setAdapter(l_ArrayAdapter_spinner_animalKind);
+                        spinner_animalKind = (Spinner) findViewById(R.id.spinner_animalKind);
+                        ArrayAdapter<String> l_ArrayAdapter_spinner_animalKind = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item, iv_ArrayList_動物類別清單); //selected item will look like a spinner set from XML
+                        l_ArrayAdapter_spinner_animalKind.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner_animalKind.setAdapter(l_ArrayAdapter_spinner_animalKind);
+                        spinner_animalKind.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item, iv_Array_動物品種清單[position]);
+                                spinner_animalType.setAdapter(l_ArrayAdapter_spinner_animalType);
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parent) {
+
+                            }
+                        });
 
 
+                                //****************
 
-                        //****************
-
-         spinner_animalType=(Spinner)findViewById(R.id.spinner_animalType);
-        ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item,iv_Array_動物品種清單[0]); //selected item will look like a spinner set from XML
-        l_ArrayAdapter_spinner_animalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-         spinner_animalType.setAdapter(l_ArrayAdapter_spinner_animalType);
+                                spinner_animalType = (Spinner) findViewById(R.id.spinner_animalType);
+                        ArrayAdapter<String> l_ArrayAdapter_spinner_animalType = new ArrayAdapter<String>(ScrollingActivity.this, android.R.layout.simple_spinner_dropdown_item, iv_Array_動物品種清單[0]); //selected item will look like a spinner set from XML
+                        l_ArrayAdapter_spinner_animalType.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner_animalType.setAdapter(l_ArrayAdapter_spinner_animalType);
 
                     }
                 });
@@ -416,36 +427,35 @@ public class ScrollingActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     //***
-    private void switch英文的動物類別轉換為中文(ArrayList<String> p_ArrayList_動物類別清單){
-        for (int i = 0;i<p_ArrayList_動物類別清單.size();i+=1){
+    private void switch英文的動物類別轉換為中文(ArrayList<String> p_ArrayList_動物類別清單) {
+        for (int i = 0; i < p_ArrayList_動物類別清單.size(); i += 1) {
 
-            switch (p_ArrayList_動物類別清單.get(i).toLowerCase()){
+            switch (p_ArrayList_動物類別清單.get(i).toLowerCase()) {
                 case "cat":
-                    p_ArrayList_動物類別清單.set(i,"貓");
+                    p_ArrayList_動物類別清單.set(i, "貓");
                     break;
                 case "dog":
-                    p_ArrayList_動物類別清單.set(i,"狗");
+                    p_ArrayList_動物類別清單.set(i, "狗");
                     break;
                 case "bird":
-                    p_ArrayList_動物類別清單.set(i,"鳥");
+                    p_ArrayList_動物類別清單.set(i, "鳥");
                     break;
                 case "reptile":
-                    p_ArrayList_動物類別清單.set(i,"蛇");
+                    p_ArrayList_動物類別清單.set(i, "蛇");
                     break;
                 case "rabbit":
-                    p_ArrayList_動物類別清單.set(i,"兔子");
+                    p_ArrayList_動物類別清單.set(i, "兔子");
                     break;
                 case "mice":
-                    p_ArrayList_動物類別清單.set(i,"老鼠");
+                    p_ArrayList_動物類別清單.set(i, "老鼠");
                     break;
 
             }
         }
-        Log.d("轉換後類別清單",iv_ArrayList_動物類別清單.toString());
+        Log.d("轉換後類別清單", iv_ArrayList_動物類別清單.toString());
 
 
     }
@@ -456,10 +466,10 @@ public class ScrollingActivity extends AppCompatActivity {
     private void init() {
 
         Factory_DynamicAnimalTypeListCreator("");
-        iv_int_countHowManyPicNeedUpload =0;
+        iv_int_countHowManyPicNeedUpload = 0;
         iv_ArrayList_object_ConditionOfAdoptPet = new ArrayList<>();
         iv_ArrayList_object_OfPictureImgurSite = new ArrayList<>();
-        iv_gson= new Gson();
+        iv_gson = new Gson();
 
 
         setViewComponent();
@@ -472,28 +482,28 @@ public class ScrollingActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                 iv_ADialog_a=new AlertDialog.Builder(ScrollingActivity.this)
-                       .setMessage("是否確定送出資料")
-                       .setTitle("送出確認")
-                       .setPositiveButton("送出", new DialogInterface.OnClickListener() {
-                           @Override
-                           public void onClick(DialogInterface dialog, int which) {
+                iv_ADialog_a = new AlertDialog.Builder(ScrollingActivity.this)
+                        .setMessage("是否確定送出資料")
+                        .setTitle("送出確認")
+                        .setPositiveButton("送出", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
 
-                               Toast.makeText(ScrollingActivity.this,"正在上傳您的資料,請稍後...",Toast.LENGTH_LONG).show();
+                                Toast.makeText(ScrollingActivity.this, "正在上傳您的資料,請稍後...", Toast.LENGTH_LONG).show();
 
-                               try {
-                                   Log.d("test","進入TRY");
-                                   uploadImageAndGetSiteBack();
-                               } catch (Exception e) {
-                                   e.printStackTrace();
-                               }
-                               addAllDataToDBServer();
+                                try {
+                                    Log.d("test", "進入TRY");
+                                    uploadImageAndGetSiteBack();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                addAllDataToDBServer();
 
-                           }
-                       })
-                       .setNegativeButton("取消",null)
-                       .show();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
 
             }
         });
@@ -502,12 +512,11 @@ public class ScrollingActivity extends AppCompatActivity {
     }
 
 
-
     private void setViewComponent() {
 
 
         //**********
-         spinner_animalArea=(Spinner)findViewById(R.id.spinner_animalArea);
+        spinner_animalArea = (Spinner) findViewById(R.id.spinner_animalArea);
         ArrayAdapter<String> l_ArrayAdapter_spinner_animalArea = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, area); //selected item will look like a spinner set from XML
         l_ArrayAdapter_spinner_animalArea.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_animalArea.setAdapter(l_ArrayAdapter_spinner_animalArea);
@@ -515,41 +524,38 @@ public class ScrollingActivity extends AppCompatActivity {
         //**
 
 
-
-
-
         //**
         //**********
-        edTxt_animalKind = (EditText)findViewById(R.id.edTxt_animalKind);
-        edTxt_animalType = (EditText)findViewById(R.id.edTxt_animalType);
-        edTxt_animalAddress = (EditText)findViewById(R.id.edTxt_animalAddress);
-        edTxt_animalAge = (EditText)findViewById(R.id.edTxt_animalAge);
-        edTxt_animalBirth = (EditText)findViewById(R.id.edTxt_animalBirth);
-        edTxt_animalChip = (EditText)findViewById(R.id.edTxt_animalChip);
-        edTxt_animalColor = (EditText)findViewById(R.id.edTxt_animalColor);
-        edTxt_animalDate = (EditText)findViewById(R.id.edTxt_animalDate);
-        edTxt_animalDisease_Other = (EditText)findViewById(R.id.edTxt_animalDisease_Other);
-        edTxt_animalGender = (EditText)findViewById(R.id.edTxt_animalGender);
-        edTxt_animalHealthy = (EditText)findViewById(R.id.edTxt_animalHealthy);
-        edTxt_animalName = (EditText)findViewById(R.id.edTxt_animalName);
-        edTxt_animalNote = (EditText)findViewById(R.id.edTxt_animalNote);
-        edTxt_animalReason = (EditText)findViewById(R.id.edTxt_animalReason);
+        edTxt_animalKind = (EditText) findViewById(R.id.edTxt_animalKind);
+        edTxt_animalType = (EditText) findViewById(R.id.edTxt_animalType);
+        edTxt_animalAddress = (EditText) findViewById(R.id.edTxt_animalAddress);
+        edTxt_animalAge = (EditText) findViewById(R.id.edTxt_animalAge);
+        edTxt_animalBirth = (EditText) findViewById(R.id.edTxt_animalBirth);
+        edTxt_animalChip = (EditText) findViewById(R.id.edTxt_animalChip);
+        edTxt_animalColor = (EditText) findViewById(R.id.edTxt_animalColor);
+        edTxt_animalDate = (EditText) findViewById(R.id.edTxt_animalDate);
+        edTxt_animalDisease_Other = (EditText) findViewById(R.id.edTxt_animalDisease_Other);
+        edTxt_animalGender = (EditText) findViewById(R.id.edTxt_animalGender);
+        edTxt_animalHealthy = (EditText) findViewById(R.id.edTxt_animalHealthy);
+        edTxt_animalName = (EditText) findViewById(R.id.edTxt_animalName);
+        edTxt_animalNote = (EditText) findViewById(R.id.edTxt_animalNote);
+        edTxt_animalReason = (EditText) findViewById(R.id.edTxt_animalReason);
         //***
         scrollingActivity = this;
         //**************
-        imgBtn1 = (ImageButton)findViewById(R.id.imgBtn1);
+        imgBtn1 = (ImageButton) findViewById(R.id.imgBtn1);
         imgBtn1.setOnClickListener(btn_click);
         //**************
-        imgBtn2 = (ImageButton)findViewById(R.id.imgBtn2);
+        imgBtn2 = (ImageButton) findViewById(R.id.imgBtn2);
         imgBtn2.setOnClickListener(btn_click);
         //**************
-        imgBtn3 = (ImageButton)findViewById(R.id.imgBtn3);
+        imgBtn3 = (ImageButton) findViewById(R.id.imgBtn3);
         imgBtn3.setOnClickListener(btn_click);
         //**************
-        imgBtn4 = (ImageButton)findViewById(R.id.imgBtn4);
+        imgBtn4 = (ImageButton) findViewById(R.id.imgBtn4);
         imgBtn4.setOnClickListener(btn_click);
         //**************
-        imgBtn5 = (ImageButton)findViewById(R.id.imgBtn5);
+        imgBtn5 = (ImageButton) findViewById(R.id.imgBtn5);
         imgBtn5.setOnClickListener(btn_click);
         //**************
         btnAdoptCondition = (Button) findViewById(R.id.btnAdoptCondition);
@@ -559,12 +565,12 @@ public class ScrollingActivity extends AppCompatActivity {
     private void addAllDataToDBServer() {
         //******判斷使用者是否填寫領養條件
 
-        if(iv_object_conditionOfAdoptPet_a == null){
-            iv_object_conditionOfAdoptPet_a = new  object_ConditionOfAdoptPet();
+        if (iv_object_conditionOfAdoptPet_a == null) {
+            iv_object_conditionOfAdoptPet_a = new object_ConditionOfAdoptPet();
             iv_object_conditionOfAdoptPet_a.createAdefault_object_ConditionOfAdoptPet();
         }
 
-            iv_ArrayList_object_ConditionOfAdoptPet.add(iv_object_conditionOfAdoptPet_a);
+        iv_ArrayList_object_ConditionOfAdoptPet.add(iv_object_conditionOfAdoptPet_a);
 
 
         //************
@@ -589,12 +595,12 @@ public class ScrollingActivity extends AppCompatActivity {
         Gson l_gsn_gson = new Gson();
         String l_strPetDataObjToJSONString = l_gsn_gson.toJson(l_PetData_PetObj);
         //***********
-        RequestBody requestBody =  RequestBody.create(Iv_MTyp_JSON,l_strPetDataObjToJSONString);
+        RequestBody requestBody = RequestBody.create(Iv_MTyp_JSON, l_strPetDataObjToJSONString);
 
         //***************
         Request request = new Request.Builder()
                 .url("http://twpetanimal.ddns.net:9487/api/v1/AnimalDatas")
-                .addHeader("Content-Type","raw")
+                .addHeader("Content-Type", "raw")
                 .post(requestBody)
                 .build();
 
@@ -602,14 +608,14 @@ public class ScrollingActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("http","fail");
+                Log.d("http", "fail");
 
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 final String json = response.body().string();
-                Log.d("http",json);
+                Log.d("http", json);
                 //textView.setText(json);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -618,7 +624,7 @@ public class ScrollingActivity extends AppCompatActivity {
                         try {
                             JSONObject jObj = new JSONObject(json);
                             String id = jObj.getString("animalID");
-                            Toast.makeText(ScrollingActivity.this,"上傳成功!(測試用_此次新增資料的id: "+id+")",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ScrollingActivity.this, "上傳成功!(測試用_此次新增資料的id: " + id + ")", Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -633,7 +639,6 @@ public class ScrollingActivity extends AppCompatActivity {
 
 
         //*******************
-
 
 
     }
@@ -651,7 +656,7 @@ public class ScrollingActivity extends AppCompatActivity {
 
                 if (selectedImgForUploadArray[i] == true) {
                     iv_int_countHowManyPicNeedUpload += 1;
-                    Toast.makeText(ScrollingActivity.this,"資料上傳中 請稍後....",Toast.LENGTH_LONG).show();
+                    Toast.makeText(ScrollingActivity.this, "資料上傳中 請稍後....", Toast.LENGTH_LONG).show();
 
                 }
             }
@@ -660,31 +665,31 @@ public class ScrollingActivity extends AppCompatActivity {
 
         //********
 
-        CountDownLatch latch=new CountDownLatch(iv_int_countHowManyPicNeedUpload);//N个工人的协作
+        CountDownLatch latch = new CountDownLatch(iv_int_countHowManyPicNeedUpload);//N个工人的协作
 
-        Log.d("","進入uploadImageAndGetSiteBack");
+        Log.d("", "進入uploadImageAndGetSiteBack");
 
 
         for (int i = 0; i < selectedImgForUploadArray.length; i++) {
 
-            if(selectedImgForUploadArray[i] == true){
+            if (selectedImgForUploadArray[i] == true) {
 
-               // Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(ScrollingActivity.this, selectedImgForUploadArray[i]==true? "True: "+i:"sFalse : "+i, Toast.LENGTH_SHORT).show();
                 String bitmapStream = transBitmapToStream(bitmapArray[i]);
                 //imgurUpload(bitmapStream);
-                Log.d(" 進入迴圈",String.valueOf(selectedImgForUploadArray.length));
-                uploadImgByCallable l_uploadImgByCallable = new uploadImgByCallable(bitmapStream,latch);
+                Log.d(" 進入迴圈", String.valueOf(selectedImgForUploadArray.length));
+                uploadImgByCallable l_uploadImgByCallable = new uploadImgByCallable(bitmapStream, latch);
                 l_uploadImgByCallable.start();
             }
 
         }
 
         latch.await();
-        Log.d(" await完畢"," ");
+        Log.d(" await完畢", " ");
 
     }
 
-    private void imgurUpload(final String image){ //插入圖片
+    private void imgurUpload(final String image) { //插入圖片
         SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
         Date date = new Date();
         String strDate = sdFormat.format(date);
@@ -692,12 +697,12 @@ public class ScrollingActivity extends AppCompatActivity {
         String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
         String mashapeKey = ""; //設定自己的 Mashape Key
         String clientId = ""; //設定自己的 Clinet ID
-        String titleString = "GetPet"+strDate; //設定圖片的標題
+        String titleString = "GetPet" + strDate; //設定圖片的標題
 
 
         AsyncHttpClient client0 = new AsyncHttpClient();
         client0.addHeader("X-Mashape-Key", mashapeKey);
-        client0.addHeader("Authorization", "Client-ID "+clientId);
+        client0.addHeader("Authorization", "Client-ID " + clientId);
         client0.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
         RequestParams params = new RequestParams();
@@ -709,23 +714,23 @@ public class ScrollingActivity extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                 if (!response.optBoolean("success") || !response.has("data")) {
-                    Log.d("editor", "response: "+response.toString());
-                    Toast.makeText(ScrollingActivity.this,"fail", Toast.LENGTH_SHORT).show();
+                    Log.d("editor", "response: " + response.toString());
+                    Toast.makeText(ScrollingActivity.this, "fail", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
 
                 JSONObject data = response.optJSONObject("data");
-                String link = data.optString("link","");
-                int width = data.optInt("width",0);
-                int height = data.optInt("height",0);
-                String bbcode = "[img="+width+"x"+height+"]"+link+"[/img]";
+                String link = data.optString("link", "");
+                int width = data.optInt("width", 0);
+                int height = data.optInt("height", 0);
+                String bbcode = "[img=" + width + "x" + height + "]" + link + "[/img]";
 
-               // Log.d("editor",data.optString("link"));
-               // Log.d("editor",bbcode);
+                // Log.d("editor",data.optString("link"));
+                // Log.d("editor",bbcode);
                 //**
 
-                Log.d("imgSite",link);
+                Log.d("imgSite", link);
                 //**
                 object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
 
@@ -778,14 +783,15 @@ public class ScrollingActivity extends AppCompatActivity {
     class uploadImgByCallable extends Thread {
         String image;
         CountDownLatch latch;
-        public uploadImgByCallable(String p_image,CountDownLatch p_latch){
+
+        public uploadImgByCallable(String p_image, CountDownLatch p_latch) {
             this.image = p_image;
             this.latch = p_latch;
         }
 
         @Override
         public void run() {
-            Log.d(" 進入線程"," 進入線程");
+            Log.d(" 進入線程", " 進入線程");
 
 
             imgurUploadInClass(image);
@@ -793,52 +799,52 @@ public class ScrollingActivity extends AppCompatActivity {
         }
 
 
-        private void imgurUploadInClass(final String image){ //插入圖片
-            Log.d(" 進入imgurUpload"," 進入imgurUpload");
+        private void imgurUploadInClass(final String image) { //插入圖片
+            Log.d(" 進入imgurUpload", " 進入imgurUpload");
             SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
             Date date = new Date();
             String strDate = sdFormat.format(date);
-            Log.d(" 1進入imgurUpload"," 進入imgurUpload");
+            Log.d(" 1進入imgurUpload", " 進入imgurUpload");
 
             //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
             String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
             String mashapeKey = "MaXLzROxvOmshVYRZbRxcLZL3s0ip1bnE2Kjsn8tf3B5bKRyig"; //設定自己的 Mashape Key
             String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
-            String titleString = "GetPet"+strDate; //設定圖片的標題
+            String titleString = "GetPet" + strDate; //設定圖片的標題
 
 
             SyncHttpClient client0 = new SyncHttpClient();
             client0.addHeader("X-Mashape-Key", mashapeKey);
-            client0.addHeader("Authorization", "Client-ID "+clientId);
+            client0.addHeader("Authorization", "Client-ID " + clientId);
             client0.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
             RequestParams params = new RequestParams();
             params.put("title", titleString);
             params.put("image", image);
-            Log.d(" 準備POST"," ");
+            Log.d(" 準備POST", " ");
 
             client0.post(urlString, params, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                     if (!response.optBoolean("success") || !response.has("data")) {
-                        Log.d("editor", "response: "+response.toString());
+                        Log.d("editor", "response: " + response.toString());
 
                         return;
                     }
 
 
                     JSONObject data = response.optJSONObject("data");
-                    String link = data.optString("link","");
-                    int width = data.optInt("width",0);
-                    int height = data.optInt("height",0);
-                    String bbcode = "[img="+width+"x"+height+"]"+link+"[/img]";
+                    String link = data.optString("link", "");
+                    int width = data.optInt("width", 0);
+                    int height = data.optInt("height", 0);
+                    String bbcode = "[img=" + width + "x" + height + "]" + link + "[/img]";
 
                     // Log.d("editor",data.optString("link"));
                     // Log.d("editor",bbcode);
                     //**
 
-                    Log.d("imgSite",link);
+                    Log.d("imgSite", link);
                     //**
                     object_OfPictureImgurSite l_object_OfPictureImgurSite = new object_OfPictureImgurSite(data.optString("link"));
 
@@ -851,11 +857,11 @@ public class ScrollingActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable e, JSONObject error) {
 
-                    Log.d("上傳圖片失敗","");
+                    Log.d("上傳圖片失敗", "");
                 }
             });
 
-            Log.d("到底?","");
+            Log.d("到底?", "");
 
         }
     }
@@ -867,7 +873,7 @@ public class ScrollingActivity extends AppCompatActivity {
     ImageButton imgBtn4;
     ImageButton imgBtn5;
     Button btnAdoptCondition;
-    ImageButton[] imgBtnArray = {imgBtn1,imgBtn2,imgBtn3,imgBtn4,imgBtn5};
+    ImageButton[] imgBtnArray = {imgBtn1, imgBtn2, imgBtn3, imgBtn4, imgBtn5};
     //*********************
     EditText edTxt_animalID;
     EditText edTxt_animalKind;
@@ -893,7 +899,6 @@ public class ScrollingActivity extends AppCompatActivity {
     Spinner spinner_animalKind;
     Spinner spinner_animalType;
     //*******
-
 
 
 }
