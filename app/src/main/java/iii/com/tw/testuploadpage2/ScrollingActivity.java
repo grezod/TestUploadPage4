@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import static android.Manifest.permission.*;
 import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+import static iii.com.tw.testuploadpage2.R.id.btnAdoptCondition;
 import static iii.com.tw.testuploadpage2.R.id.edTxt_animalAddress;
 import static iii.com.tw.testuploadpage2.R.id.edTxt_animalAge;
 import static iii.com.tw.testuploadpage2.R.id.spinner_animalArea;
@@ -514,7 +515,7 @@ public class ScrollingActivity extends AppCompatActivity {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
-                                    addAllDataToDBServer();
+                                    //addAllDataToDBServer();
                                 }
 
                             }
@@ -584,6 +585,7 @@ public class ScrollingActivity extends AppCompatActivity {
         String p_string_未填寫的欄位有哪些 = "尚未填寫以下欄位:\n";
         Log.d("原始長度", p_string_未填寫的欄位有哪些.length() + "");
         //*********
+        /*
         p_string_未填寫的欄位有哪些 += edTxt_animalName.getText().toString().isEmpty() ? "寵物姓名\n" : "";
         p_string_未填寫的欄位有哪些 += edTxt_animalAge.getText().toString().isEmpty() ? "寵物年齡\n" : "";
         p_string_未填寫的欄位有哪些 += edTxt_animalGender.getText().toString().isEmpty() ? "性別\n" : "";
@@ -594,6 +596,7 @@ public class ScrollingActivity extends AppCompatActivity {
         p_string_未填寫的欄位有哪些 += edTxt_animalColor.getText().toString().isEmpty() ? "毛色\n" : "";
         p_string_未填寫的欄位有哪些 += edTxt_animalDate.getText().toString().isEmpty() ? "送養日期\n" : "";
         p_string_未填寫的欄位有哪些 += edTxt_animalReason.getText().toString().isEmpty() ? "送養理由\n" : "";
+        */
 
         return p_string_未填寫的欄位有哪些;
     }
@@ -830,14 +833,14 @@ public class ScrollingActivity extends AppCompatActivity {
             Log.d(" 1進入imgurUpload", " 進入imgurUpload");
 
             //String urlString = "https://imgur-apiv3.p.mashape.com/3/image/";
-            String urlString = "https://imgur-apiv3.p.mashape.com/3/image";
-            String mashapeKey = ""; //設定自己的 Mashape Key
-            String clientId = ""; //設定自己的 Clinet ID
+            String urlString = "https://api.imgur.com/3/image/";
+            //String mashapeKey = ""; //設定自己的 Mashape Key
+            String clientId = "d8371f0a27e5085"; //設定自己的 Clinet ID
             String titleString = "GetPet" + strDate; //設定圖片的標題
 
 
             SyncHttpClient client0 = new SyncHttpClient();
-            client0.addHeader("X-Mashape-Key", mashapeKey);
+            //client0.addHeader("X-Mashape-Key", mashapeKey);
             client0.addHeader("Authorization", "Client-ID " + clientId);
             client0.addHeader("Content-Type", "application/x-www-form-urlencoded");
 
