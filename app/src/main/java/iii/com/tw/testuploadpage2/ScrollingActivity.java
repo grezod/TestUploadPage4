@@ -368,6 +368,9 @@ public class ScrollingActivity extends AppCompatActivity {
                             Log.d("l_JSString(animalType)", l_JSONObject.getString("animalType"));
                         }
                     }
+                    //**
+                    iv_ArrayList_動物類別清單.add("請選擇");
+                    //**
                     Log.d("iv_ArrayList_動物類別清單", iv_ArrayList_動物類別清單.toString() + "共" + iv_ArrayList_動物類別清單.size() + "種");
                     iv_Array_動物品種清單 = new ArrayList[iv_ArrayList_動物類別清單.size()];
                     for (int j = 1; j <= iv_ArrayList_動物類別清單.size(); j += 1) {
